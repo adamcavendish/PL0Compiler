@@ -1,5 +1,5 @@
 build/*
-external/gtest-1.7.0/*
+*/useless/*
 
 .clang_complete
 
@@ -9,7 +9,7 @@ ehthumbs.db
 Thumbs.db
 
 # ### FOR vim ###
-.swp
+*.swp
 
 # ### FOR C++ ###
 # Compiled Object files
