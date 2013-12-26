@@ -13,6 +13,8 @@ ExternalProject_Add(
     SVN_REPOSITORY http://googletest.googlecode.com/svn/trunk/
     SVN_REVISION -r 660
     TIMEOUT 1
+	# Disable update step
+	UPDATE_COMMAND ""
     # Disable install step
     INSTALL_COMMAND ""
     # Wrap download, configure and build steps in a script to log output
@@ -33,13 +35,14 @@ INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/include/")
 PROJECT(PL0Compiler)
 MESSAGE(STATUS "Project: " ${PROJECT_NAME})
 
-# SET(__TARGET_NAME__ pl0_lexer)
-# SET(__SRC__
-# 	src/lexermain.cpp
-# 	src/lexer/Lexer.cpp
-# 	src/lexer/WordMap.cpp
-# )
-# ADD_EXECUTABLE(${__TARGET_NAME__} ${__SRC__})
+SET(__TARGET_NAME__ homework/hw01)
+SET(__SRC__
+	homework/hw001.cpp
+	src/filebuf/FileBuf.cpp
+	src/tokenizer/Tokenizer.cpp
+	src/lexer/WordMap.cpp
+)
+ADD_EXECUTABLE(${__TARGET_NAME__} ${__SRC__})
 
 # TESTS
 SET(__TEST_NAME__ test_FileBuf)

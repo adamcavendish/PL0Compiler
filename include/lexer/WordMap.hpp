@@ -29,10 +29,18 @@ public://function
 	inline bool is_operator(const char ch) const
 	{ return m_operator_pool.find(ch) != std::string::npos; }
 
+	inline bool
+	get_othersym_token(const std::string & key, Token & tok) const;
+
+	inline bool is_othersym(const char ch) const
+	{ return m_othersym_pool.find(ch) != std::string::npos; }
+
 private://members
 	const std::unordered_map<std::string, Token> m_word_map;
 	const std::string m_operator_pool;
 	const std::unordered_map<std::string, std::pair<Token, priority> > m_operator_map;
+	const std::string m_othersym_pool;
+	const std::unordered_map<std::string, Token> m_othersym_map;
 };//class WordMap
 
 
@@ -55,6 +63,16 @@ WordMap::get_op_token(const std::string & key, Token & tok) const {
 	}//if
 	return false;
 }//get_op_token(key, tok)
+
+inline bool
+WordMap::get_othersym_token(const std::string & key, Token & tok) const {
+	auto ret = m_othersym_map.find(key);
+	if(ret != m_othersym_map.end()) {
+		tok = ret->second;
+		return true;
+	}//if
+	return false;
+}//get_othersym_token(key, tok)
 
 }//namespace PL0
 

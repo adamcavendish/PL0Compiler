@@ -71,6 +71,11 @@ PL0_PRIVATE: // functions
 	 */
 	void extractTokenOperator();
 
+	/**
+	 * @brief helper function to extract tokens of other syms, like ',' '.' ';' and etc.
+	 */
+	void extractTokenOther();
+
 PL0_PRIVATE: // members
 	/// @brief the file buffer that handles the source code file
 	std::shared_ptr<FileBuf> m_pfb;

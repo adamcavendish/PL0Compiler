@@ -26,7 +26,7 @@ char FileBuf::bump() {
 	if(ret == '\n' || ret == '\r') {
 		ret = '\n';
 		++m_line_num;
-		m_pos_num = 0;
+		m_pos_num = 1;
 	} else {
 		++m_pos_num;
 	}//if-else
@@ -53,7 +53,7 @@ FileBuf::next() {
 	if(ret == '\n' || ret == '\r') {
 		ret = '\n';
 		++m_line_num;
-		m_pos_num = 0;
+		m_pos_num = 1;
 	} else {
 		++m_pos_num;
 	}//if-else

@@ -18,7 +18,7 @@ WordMap::WordMap() :
 			{ "while",		Token::tk_while			},
 			{ "write",		Token::tk_write			}
 	}),
-	m_operator_pool("+-*/=<>:(),;."),
+	m_operator_pool("+-*/=<>:()"),
 	m_operator_map({
 			{ "+",			{ Token::tk_plus,			priority(10)	}	},
 			{ "-",			{ Token::tk_minus,			priority(10)	}	},
@@ -32,10 +32,13 @@ WordMap::WordMap() :
 			{ ">=",			{ Token::tk_greaterequal,	priority(10)	}	},
 			{ ":=",			{ Token::tk_assign,			priority(10)	}	},
 			{ "(",			{ Token::tk_lparenthesis,	priority(10)	}	},
-			{ ")",			{ Token::tk_rparenthesis,	priority(10)	}	},
-			{ ",",			{ Token::tk_comma,			priority(10)	}	},
-			{ ";",			{ Token::tk_semicolon,		priority(10)	}	},
-			{ ".",			{ Token::tk_period,			priority(10)	}	},
+			{ ")",			{ Token::tk_rparenthesis,	priority(10)	}	}
+	}),
+	m_othersym_pool(",;."),
+	m_othersym_map({
+			{ ",",			Token::tk_comma			},
+			{ ";",			Token::tk_semicolon,	},
+			{ ".",			Token::tk_period,		},
 	})
 {}
 

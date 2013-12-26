@@ -13,10 +13,6 @@ bool Tokenizer::next() {
 	char ch = m_pfb->get();
 	m_position = std::make_pair(m_pfb->line(), m_pfb->position());
 
-#ifndef NDEBUG
-	//std::cout << "DEBUG: " << (int)(ch) << std::endl;
-#endif
-
 	if(ch == std::char_traits<char>::eof()) {
 		m_cur_tok = Token::tk_eof;
 		m_cur_tokword.clear();
@@ -31,6 +27,8 @@ bool Tokenizer::next() {
 		this->extractTokenDigit();
 	} else if(m_pwordmap->is_operator(ch)) {
 		this->extractTokenOperator();
+	} else if(m_pwordmap->is_othersym(ch)) {
+		this->extractTokenOther();
 	}//if-else
 
 	if(m_cur_tok == Token::tk_eof)
@@ -100,6 +98,22 @@ void Tokenizer::extractTokenOperator() {
 	if(m_pwordmap->get_op_token(m_cur_tokword, m_cur_tok) == false)
 		m_cur_tok = Token::tk_error;
 }//extractTokenOperator()
+
+void Tokenizer::extractTokenOther() {
+	m_cur_tokword.clear();
+
+	char ch = m_pfb->get();
+	while(m_pwordmap->is_othersym(ch)) {
+		m_pfb->bump();
+		m_cur_tokword += ch;
+
+		ch = m_pfb->get();
+	}//while
+
+	// if it's not an preserved othersym, it must be an error
+	if(m_pwordmap->get_othersym_token(m_cur_tokword, m_cur_tok) == false)
+		m_cur_tok = Token::tk_error;
+}//extractTokenOther()
 
 }//namespace PL0
 

@@ -18,7 +18,7 @@ PL0_PUBLIC: //functions
 		m_file(filepath),
 		m_pbuf(m_file.rdbuf()),
 		m_line_num(1),
-		m_pos_num(0)
+		m_pos_num(1)
 	{}
 
 	~FileBuf() {}
