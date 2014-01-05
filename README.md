@@ -10,12 +10,7 @@ I am implementing the compiler using standard c++11 with gcc-4.8
 ----
 Dependency:
 
-* [gtest-1.7.0](https://code.google.com/p/googletest/)
-> Download **gtest-1.7.0** and unpack it in the **external** directory
-> if you get **external/gtest-1.7.0/** that means you're getting it right
-> cd external/gtest-1.7.0
-> ./configure
-> make
+* [cmake](http://www.cmake.org/)
 
 ----
 
