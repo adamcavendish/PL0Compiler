@@ -77,18 +77,19 @@ ADD_EXECUTABLE(${__TARGET_NAME__} ${__SRC__})
 TARGET_LINK_LIBRARIES(${__TARGET_NAME__} gtest gtest_main pthread)
 ADD_TEST(${__TEST_NAME__} ${__TARGET_NAME__})
 
-# SET(__TEST_NAME__ test_Parser)
-# SET(__TARGET_NAME__ test003_Parser)
-# SET(__SRC__
-# 	test/test003_Parser.cpp
-# 	src/filebuf/FileBuf.cpp
-# 	src/tokenizer/Tokenizer.cpp
-# 	src/tokenizer/WordMap.cpp
-# 	src/parser/detail/ConstVarDecl.cpp
-# 	src/parser/detail/ConstDeclStmt.cpp
-# 	src/parser/detail/VarDeclStmt.cpp
-# )
-# ADD_EXECUTABLE(${__TARGET_NAME__} ${__SRC__})
-# TARGET_LINK_LIBRARIES(${__TARGET_NAME__} gtest gtest_main pthread)
-# ADD_TEST(${__TEST_NAME__} ${__TARGET_NAME__})
+SET(__TEST_NAME__ test_Parser)
+SET(__TARGET_NAME__ test003_Parser)
+SET(__SRC__
+	test/test003_Parser.cpp
+	src/filebuf/FileBuf.cpp
+	src/tokenizer/Tokenizer.cpp
+	src/tokenizer/WordMap.cpp
+	src/parser/detail/BlockUnit.cpp
+	src/parser/detail/ConstDeclStmt.cpp
+	src/parser/detail/ConstVarDecl.cpp
+	src/parser/detail/VarDeclStmt.cpp
+)
+ADD_EXECUTABLE(${__TARGET_NAME__} ${__SRC__})
+TARGET_LINK_LIBRARIES(${__TARGET_NAME__} gtest gtest_main pthread)
+ADD_TEST(${__TEST_NAME__} ${__TARGET_NAME__})
 

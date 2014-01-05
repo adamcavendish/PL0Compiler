@@ -46,6 +46,5 @@ PL0_PRIVATE:
 	std::unique_ptr<ParserBase> m_var_decl_stmt;
 };//class BlockUnit
 
-
 }//namespace PL0
 

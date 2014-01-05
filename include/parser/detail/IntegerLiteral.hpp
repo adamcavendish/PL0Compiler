@@ -42,7 +42,7 @@ PL0_PRIVATE: //member variables
 };//class IntegerLiteral
 
 bool
-IntegerLiteral::parse(std::shared_ptr<Tokenizer> toker) override {
+IntegerLiteral::parse(std::shared_ptr<Tokenizer> toker) {
 	bool flag = true;
 
 	try {
@@ -52,9 +52,9 @@ IntegerLiteral::parse(std::shared_ptr<Tokenizer> toker) override {
 		flag = false;
 	} catch(std::out_of_range & e) {
 		parse_error(toker, "Number out of range. limit: ["
-				+ std::to_string(std::numeric_limits<int>::min)
+				+ std::to_string(std::numeric_limits<int>::min())
 				+ ", "
-				+ std::to_string(std::numeric_limits<int>::max)
+				+ std::to_string(std::numeric_limits<int>::max())
 				+ "]");
 		flag = false;
 	}//try-catch

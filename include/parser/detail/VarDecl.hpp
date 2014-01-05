@@ -20,7 +20,7 @@ PL0_PUBLIC:
 	VarDecl() {}
 	VarDecl(const VarDecl & rhs) = delete;
 	VarDecl(VarDecl && rhs) :
-		m_ident(std::move(rhs.m_ident)),
+		m_ident(std::move(rhs.m_ident))
 	{}
 	~VarDecl() {}
 
@@ -44,7 +44,7 @@ PL0_PRIVATE:
 };//class VarDecl
 
 bool
-VarDecl::parse(std::shared_ptr<Tokenizer> toker) override {
+VarDecl::parse(std::shared_ptr<Tokenizer> toker) {
 	m_ident = toker->word();
 	toker->next(); // eat the current identifier
 	return true;

@@ -41,7 +41,8 @@ make_unique(size_t n) {
 template <class T, class... Args>
 typename _Unique_if<T>::_Known_bound
 make_unique(Args && ...) {
-	static_assert("make_unique<T[N]>() is forbidden, please use make_unique<T[]>() version.");
+	static_assert(std::extent<T>::value == 0,
+			"make_unique<T[N]>() is forbidden, please use make_unique<T[]>() version.");
 }
 
 }//namespace auc

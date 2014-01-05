@@ -6,12 +6,13 @@
 #include <token.hpp>
 #include <preprocess.hpp>
 #include <parser/detail/ParserBase.hpp>
+#include <parser/detail/IntegerLiteral.hpp>
 
 namespace PL0
 {
 
 bool
-ConstVarDecl::parse(std::shared_ptr<Tokenizer> toker) override {
+ConstVarDecl::parse(std::shared_ptr<Tokenizer> toker) {
 	m_ident = toker->word();
 
 	toker->next(); // eat the current identifier
@@ -27,7 +28,7 @@ ConstVarDecl::parse(std::shared_ptr<Tokenizer> toker) override {
 		// make_unique was overlooked by c++11, a simple implementation
 		auto int_num = auc::make_unique<IntegerLiteral>();
 		if(int_num->parse(toker)) {
-			m_node = int_num;
+			m_node = std::move(int_num);
 		} else {
 			return false;
 		}//if-else

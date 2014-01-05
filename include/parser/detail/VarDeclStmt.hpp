@@ -43,6 +43,5 @@ PL0_PRIVATE:
 	std::vector<std::unique_ptr<ParserBase>> m_node_vec;
 };//class VarDeclStmt
 
-
 }//namespace PL0
 

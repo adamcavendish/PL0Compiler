@@ -9,8 +9,9 @@
 // PL0Compiler
 #include <token.hpp>
 #include <preprocess.hpp>
-#include <parser/detail/ParserBase.hpp>
 #include <parser/HelperFunctions.hpp>
+#include <parser/detail/ParserBase.hpp>
+#include <parser/detail/BlockUnit.hpp>
 
 namespace PL0
 {
@@ -32,7 +33,7 @@ PL0_PUBLIC:
 		if(this == &rhs)
 			return (*this);
 
-		m_node = std::move(rhs.m_node)
+		m_node = std::move(rhs.m_node);
 		return (*this);
 	}//move assignment
 
@@ -44,18 +45,18 @@ PL0_PRIVATE:
 };//class ProgramUnit
 
 bool
-ProgramUnit::parse(std::shared_ptr<Tokenizer> toker) override {
+ProgramUnit::parse(std::shared_ptr<Tokenizer> toker) {
 	bool flag = true;
 
 	auto block = auc::make_unique<BlockUnit>();
 
-	if(block.parse()) {
-		m_node = block;
+	if(block->parse(toker)) {
+		m_node = std::move(block);
 	} else {
 		flag = false;
 	}//if-else
 
-	if(flag = true && toker->token() == Token::tk_period) {
+	if(flag == true && toker->token() == Token::tk_period) {
 		toker->next(); // eat '.' token
 	} else {
 		parse_error(toker, "A program needs to be ended with a '.'");

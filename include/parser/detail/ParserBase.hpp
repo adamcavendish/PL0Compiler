@@ -12,21 +12,22 @@ class Tokenizer;
 
 /**
  * @brief the base object of all parsers
+ *
+ * All parsers should be default constructable, moveable but non-copyable,
+ * move-assignable but non-copy-assignable.
  */
 class ParserBase
 {
 PL0_PUBLIC:
 	/**
-	 * @brief All parsers should be moveable but non-copyable
+	 * @brief All parsers should be default constructable
 	 */
-	virtual
-	ParserBase(ParserBase && rhs) = 0;
+	ParserBase() {}
 
 	/**
-	 * @brief All parsers should be move-assignable but non-copy-assignable
+	 * @brief All parsers should be moveable but non-copyable
 	 */
-	virtual ParserBase &
-	operator=(ParserBase && rhs) = 0;
+	ParserBase(ParserBase && rhs) {}
 
 	/**
 	 * @brief parse function should do the corresponding parsing work
@@ -54,28 +55,8 @@ PL0_PUBLIC:
 	 * @brief virtual destructor of Base Parser
 	 */
 	virtual
-	~ParserBase() = 0;
-
-PL0_PRIVATE:
-	/**
-	 * @brief Making the derived class non-copyable.
-	 *		This will cause a link-time error if it actually defined and
-	 *		used the copy construction.
-	 *		However it is always a good habit to define the copy constructor
-	 *		of the derived Parsers `deleted`. @see ConstVarDecl.hpp for example.
-	 */
-	ParserBase(const ParserBase & rhs) final;
-
-	/**
-	 * @brief Making the derived class non-copy-assignable.
-	 *		This will cause a link-time error if it actually defined and
-	 *		used the copy assignment.
-	 *		However it is always a good habit to define the copy assign operation
-	 *		of the derived Parsers `deleted`. @see ConstVarDecl.hpp for example.
-	 */
-	ParserBase &
-	operator=(const ParserBase & rhs) final;
-}//ParserBase
-
+	~ParserBase() {}
+};//class ParserBase
 
 }//namespace PL0
+

@@ -8,13 +8,11 @@
 // PL0Compiler
 #include <token.hpp>
 #include <preprocess.hpp>
-#include <parser/detail/ParserBase.hpp>
 #include <parser/HelperFunctions.hpp>
+#include <parser/detail/ParserBase.hpp>
 
 namespace PL0
 {
-
-class IntegerLiteral;
 
 class ConstVarDecl : public ParserBase {
 PL0_PUBLIC:

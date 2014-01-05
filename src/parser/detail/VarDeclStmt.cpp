@@ -9,8 +9,9 @@
 // PL0Compiler
 #include <token.hpp>
 #include <preprocess.hpp>
-#include <parser/detail/ParserBase.hpp>
 #include <parser/HelperFunctions.hpp>
+#include <parser/detail/ParserBase.hpp>
+#include <parser/detail/VarDecl.hpp>
 
 namespace PL0
 {
@@ -18,7 +19,7 @@ namespace PL0
 class Tokenizer;
 
 bool
-VarDeclStmt::parse(std::shared_ptr<Tokenizer> toker) override {
+VarDeclStmt::parse(std::shared_ptr<Tokenizer> toker) {
 	bool flag = true;
 
 	toker->next(); // eat 'var' token
