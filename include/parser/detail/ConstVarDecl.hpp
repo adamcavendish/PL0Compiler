@@ -1,0 +1,56 @@
+#pragma once
+// STL
+#include <iostream>
+#include <memory>
+#include <utility>
+// auc
+#include <auc/all.hpp>
+// PL0Compiler
+#include <token.hpp>
+#include <preprocess.hpp>
+#include <parser/detail/ParserBase.hpp>
+#include <parser/HelperFunctions.hpp>
+
+namespace PL0
+{
+
+class IntegerLiteral;
+
+class ConstVarDecl : public ParserBase {
+PL0_PUBLIC:
+	ConstVarDecl() {}
+	ConstVarDecl(const ConstVarDecl & rhs) = delete;
+	ConstVarDecl(ConstVarDecl && rhs) :
+		m_ident(std::move(rhs.m_ident)),
+		m_node(std::move(rhs.m_node))
+	{}
+	~ConstVarDecl() {}
+
+	ConstVarDecl & operator=(const ConstVarDecl & rhs) = delete;
+	ConstVarDecl & operator=(ConstVarDecl && rhs) {
+		if(this == &rhs)
+			return (*this);
+
+		m_ident = std::move(rhs.m_ident);
+		m_node = std::move(rhs.m_node);
+		return (*this);
+	}//move assignment
+
+	bool
+	parse(std::shared_ptr<Tokenizer> toker) override;
+
+PL0_PRIVATE:
+	/**
+	 * @brief m_ident stores the identifier
+	 */
+	std::string m_ident;
+
+	/**
+	 * @brief m_node stores the next abstract-syntax-tree node, @see README.md for the grammer
+	 */
+	std::unique_ptr<ParserBase> m_node;
+};//class ConstVarDecl
+
+}//namespace PL0
+
+
