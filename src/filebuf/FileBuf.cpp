@@ -1,6 +1,5 @@
 #include <filebuf/FileBuf.hpp>
 
-
 namespace PL0 {
 
 char

@@ -180,15 +180,127 @@ TEST(FileBufTest, chk_unget) {
 }
 
 TEST(FileBufTest, chk_line_position) {
-	/*
 	FileBuf fb("win.pl0");
-	char ch = fb.bump();
-	while(ch != std::char_traits<char>::eof()) {
-		std::cout << ch << " <" << fb.line() << ":" << fb.position() << ">" << std::endl;
+	char ch = fb.get();
 
-		ch = fb.bump();
-	}//while
-	*/
+	ASSERT_EQ(ch, 'c');
+	ASSERT_EQ(fb.line(), 1);
+	ASSERT_EQ(fb.position(), 1);
+	fb.bump();
+
+	ch = fb.get();
+	ASSERT_EQ(ch, 'o');
+	ASSERT_EQ(fb.line(), 1);
+	ASSERT_EQ(fb.position(), 2);
+	fb.bump();
+
+	ch = fb.get();
+	ASSERT_EQ(ch, 'n');
+	ASSERT_EQ(fb.line(), 1);
+	ASSERT_EQ(fb.position(), 3);
+	fb.bump();
+
+	ch = fb.get();
+	ASSERT_EQ(ch, 's');
+	ASSERT_EQ(fb.line(), 1);
+	ASSERT_EQ(fb.position(), 4);
+	fb.bump();
+
+	ch = fb.get();
+	ASSERT_EQ(ch, 't');
+	ASSERT_EQ(fb.line(), 1);
+	ASSERT_EQ(fb.position(), 5);
+	fb.bump();
+
+	ch = fb.get();
+	ASSERT_EQ(ch, ' ');
+	ASSERT_EQ(fb.line(), 1);
+	ASSERT_EQ(fb.position(), 6);
+	fb.bump();
+
+	ch = fb.get();
+	ASSERT_EQ(ch, 'a');
+	ASSERT_EQ(fb.line(), 1);
+	ASSERT_EQ(fb.position(), 7);
+	fb.bump();
+
+	ch = fb.get();
+	ASSERT_EQ(ch, '=');
+	ASSERT_EQ(fb.line(), 1);
+	ASSERT_EQ(fb.position(), 8);
+	fb.bump();
+
+	ch = fb.get();
+	ASSERT_EQ(ch, '1');
+	ASSERT_EQ(fb.line(), 1);
+	ASSERT_EQ(fb.position(), 9);
+	fb.bump();
+
+	ch = fb.get();
+	ASSERT_EQ(ch, '0');
+	ASSERT_EQ(fb.line(), 1);
+	ASSERT_EQ(fb.position(), 10);
+	fb.bump();
+
+	ch = fb.get();
+	ASSERT_EQ(ch, ';');
+	ASSERT_EQ(fb.line(), 1);
+	ASSERT_EQ(fb.position(), 11);
+	fb.bump();
+
+	ch = fb.get();
+	ASSERT_EQ(ch, '\n');
+	ASSERT_EQ(fb.line(), 1);
+	ASSERT_EQ(fb.position(), 12);
+	fb.bump();
+	
+	ch = fb.get();
+	ASSERT_EQ(ch, 'v');
+	ASSERT_EQ(fb.line(), 2);
+	ASSERT_EQ(fb.position(), 1);
+	fb.bump();
+	
+	ch = fb.get();
+	ASSERT_EQ(ch, 'a');
+	ASSERT_EQ(fb.line(), 2);
+	ASSERT_EQ(fb.position(), 2);
+	fb.bump();
+
+	ch = fb.get();
+	ASSERT_EQ(ch, 'r');
+	ASSERT_EQ(fb.line(), 2);
+	ASSERT_EQ(fb.position(), 3);
+	fb.bump();
+
+	ch = fb.get();
+	ASSERT_EQ(ch, ' ');
+	ASSERT_EQ(fb.line(), 2);
+	ASSERT_EQ(fb.position(), 4);
+	fb.bump();
+
+	ch = fb.get();
+	ASSERT_EQ(ch, 'b');
+	ASSERT_EQ(fb.line(), 2);
+	ASSERT_EQ(fb.position(), 5);
+	fb.bump();
+
+	ch = fb.get();
+	ASSERT_EQ(ch, ',');
+	ASSERT_EQ(fb.line(), 2);
+	ASSERT_EQ(fb.position(), 6);
+	fb.bump();
+
+	ch = fb.get();
+	ASSERT_EQ(ch, 'c');
+	ASSERT_EQ(fb.line(), 2);
+	ASSERT_EQ(fb.position(), 7);
+	fb.bump();
+
+	ch = fb.get();
+	ASSERT_EQ(ch, ';');
+	ASSERT_EQ(fb.line(), 2);
+	ASSERT_EQ(fb.position(), 8);
+	fb.bump();
 
 	SUCCEED();
 }

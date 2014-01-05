@@ -3,7 +3,8 @@
 namespace PL0 {
 
 enum Token {
-	tk_error = -2000,
+	tk_ok = -2000,
+	tk_error,
 
 	tk_eof = -1000,
 	tk_linebreak,

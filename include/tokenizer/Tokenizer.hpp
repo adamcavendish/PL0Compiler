@@ -16,7 +16,7 @@ class Tokenizer {
 PL0_PUBLIC: //functions
 	Tokenizer(const std::shared_ptr<FileBuf> fb, const std::shared_ptr<WordMap> wordmap) :
 		m_pfb(fb),
-		m_cur_tok(Token::tk_eof),
+		m_cur_tok(Token::tk_ok),
 		m_cur_tokword(),
 		m_position(),
 		m_pwordmap(wordmap)
