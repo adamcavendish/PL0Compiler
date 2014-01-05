@@ -42,13 +42,6 @@ FileBuf::next() {
 
 	m_last_char = ret;
 
-	ret = m_pbuf->sgetc();
-
-	if(this->check_at_newline(ret))
-		ret = m_pbuf->snextc();
-
-	m_last_char = ret;
-
 	if(ret == '\n' || ret == '\r') {
 		ret = '\n';
 		++m_line_num;
@@ -57,6 +50,13 @@ FileBuf::next() {
 		++m_pos_num;
 	}//if-else
 
+	ret = m_pbuf->sgetc();
+
+	if(this->check_at_newline(ret))
+		ret = m_pbuf->snextc();
+
+	if(ret == '\n' || ret == '\r')
+		ret = '\n';
 	return ret;
 }//next()
 

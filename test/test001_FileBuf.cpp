@@ -305,6 +305,19 @@ TEST(FileBufTest, chk_line_position) {
 	SUCCEED();
 }
 
+TEST(FileBufTest, chk_next_at_newline) {
+	FileBuf fb("win.pl0");
+
+	char ch;
+	for(auto i = 0; i < 11; ++i)
+		fb.bump();
+	ch = fb.next();
+
+	ASSERT_EQ(ch, 'v');
+	EXPECT_EQ(fb.line(), 2);
+	EXPECT_EQ(fb.position(), 1);
+}
+
 int main(int argc, char * argv[])
 {
 	testing::InitGoogleTest(&argc, argv);

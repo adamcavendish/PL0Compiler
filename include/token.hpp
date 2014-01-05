@@ -7,7 +7,6 @@ enum Token {
 	tk_error,
 
 	tk_eof = -1000,
-	tk_linebreak,
 
 	tk_begin = 1000,
 	tk_call,

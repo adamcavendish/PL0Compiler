@@ -11,16 +11,15 @@ bool Tokenizer::next() {
 	m_pfb->eat_space();
 
 	char ch = m_pfb->get();
+	while(ch == '\n') {
+		m_pfb->bump();
+		ch = m_pfb->get();
+	}//while
 	m_position = std::make_pair(m_pfb->line(), m_pfb->position());
 
 	if(ch == std::char_traits<char>::eof()) {
 		m_cur_tok = Token::tk_eof;
 		m_cur_tokword.clear();
-	} else if(ch == '\n') {
-		m_cur_tok = Token::tk_linebreak;
-		m_cur_tokword.clear();
-
-		m_pfb->bump();
 	} else if(isalpha(ch)) {
 		this->extractTokenAlpha();
 	} else if(isdigit(ch)) {

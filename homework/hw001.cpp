@@ -50,8 +50,6 @@ int main()
 
 	Tokenizer toker(pfb, pwm);
 	while(toker.next()) {
-		if(toker.token() == Token::tk_linebreak)
-			continue;
 		if(toker.token() == Token::tk_number) {
 			std::cout << "(" << mmap[toker.token()] << ", " << to_int(toker.word()) << ")" << std::endl;
 		} else {
