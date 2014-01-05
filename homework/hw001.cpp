@@ -6,7 +6,7 @@
 // C-STL
 #include <cctype>
 // PL0Compiler
-#include <tokenizer/Tokenizer.hpp>
+#include <tokenizer/all.hpp>
 
 using namespace PL0;
 

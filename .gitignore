@@ -1,5 +1,5 @@
 build/*
-*/useless/*
+useless
 
 .clang_complete
 

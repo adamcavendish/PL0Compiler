@@ -18,25 +18,49 @@ Dependency:
 > make
 
 ----
+
+## Grammar
+
 The following is the syntax rules of the model language defined in EBNF:
 
-	program = block "." .
+	program = block "."
 
-	block = [ "const" ident "=" number {"," ident "=" number} ";"]
-			[ "var" ident {"," ident} ";"]
-			{ "procedure" ident ";" block ";" } statement .
+	block = [ "const" ident "=" number { "," ident "=" number } ";" ]
+			[ "var" ident { "," ident } ";" ]
+			{ "procedure" ident ";" block ";" } statement
 
 	statement = [ ident ":=" expression | "call" ident |
-				"begin" statement {";" statement } "end" |
+				"begin" statement { ";" statement } "end" |
 				"if" condition "then" statement |
-				"while" condition "do" statement ].
+				"while" condition "do" statement ]
 
 	condition = "odd" expression |
-				expression ("="|"#"|"<"|"<="|">"|">=") expression .
+				expression ("="|"#"|"<"|"<="|">"|">=") expression
 
-	expression = [ "+"|"-"] term { ("+"|"-") term}.
+	expression = ["+"|"-"] term { ("+"|"-") term }
 
-	term = factor {("*"|"/") factor}.
+	term = factor { ("*"|"/") factor }
 
-	factor = ident | number | "(" expression ")".
+	factor = ident | number | "(" expression ")"
+
+----
+
+## Abstruct-Syntax-Tree Structure
+
+Parser structure:
+
+	Parser ::=
+		ProgramUnit
+	ProgramUnit ::=
+		BlockUnit "."
+	BlockUnit ::=
+		[ConstDeclStmt] [VarDeclStmt]
+	ConstDeclStmt ::=
+		"const" ConstVarDecl { "," ConstVarDecl } ";"
+	VarDeclStmt ::=
+		"var" VarDecl { "," VarDecl } ";"
+	ConstVarDecl ::=
+		ident "=" number
+	VarDecl ::=
+		ident
 
