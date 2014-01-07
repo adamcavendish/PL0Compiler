@@ -44,7 +44,7 @@ ConstVarDecl::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 
 void
 ConstVarDecl::pretty_print(std::ostream & os, std::size_t ident) const {
-	os << std::string(ident, '\t') << "ConstVarDecl" << std::endl;
+	os << std::string(ident, '\t') << "ConstVarDecl '" << m_ident << "'" << std::endl;
 
 	if(m_node)
 		m_node->pretty_print(os, ident + 1);
