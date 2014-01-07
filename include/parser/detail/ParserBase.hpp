@@ -1,6 +1,7 @@
 #pragma once
 
 // STL
+#include <iostream>
 #include <memory>
 // PL0Compiler
 #include <preprocess.hpp>
@@ -33,15 +34,13 @@ PL0_PUBLIC:
 	 * @brief parse function should do the corresponding parsing work
 	 */
 	virtual bool
-	parse(std::shared_ptr<Tokenizer> toker) = 0;
+	parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) = 0;
 
 	/**
 	 * @brief pretty_print function will print the abstruct-syntax-tree in a human-readable way.
 	 */
-	/*
 	virtual void
-	pretty_print() = 0;
-	 */
+	pretty_print(std::ostream & os, std::size_t ident) const = 0;
 
 	/**
 	 * @brief generate function will generate the intermediate code representation

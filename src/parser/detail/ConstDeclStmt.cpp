@@ -9,6 +9,7 @@
 // PL0Compiler
 #include <token.hpp>
 #include <preprocess.hpp>
+#include <tokenizer/Tokenizer.hpp>
 #include <parser/HelperFunctions.hpp>
 #include <parser/detail/ParserBase.hpp>
 #include <parser/detail/ConstVarDecl.hpp>
@@ -19,14 +20,14 @@ namespace PL0
 class Tokenizer;
 
 bool
-ConstDeclStmt::parse(std::shared_ptr<Tokenizer> toker) {
+ConstDeclStmt::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 	bool flag = true;
 
 	toker->next(); // eat 'const' token
 
 	while(true) {
 		auto cvar = auc::make_unique<ConstVarDecl>();
-		if(cvar->parse(toker)) {
+		if(cvar->parse(os, toker)) {
 			m_node_vec.push_back(std::move(cvar));
 		} else {
 			flag = false;
@@ -48,7 +49,14 @@ ConstDeclStmt::parse(std::shared_ptr<Tokenizer> toker) {
 	}//if-else
 	
 	return flag;
-}//parse(toker)
+}//parse(os, toker)
+
+void
+ConstDeclStmt::pretty_print(std::ostream & os, std::size_t ident) const {
+	os << std::string(ident, '\t') << "ConstDeclStmt" << std::endl;
+	for(const auto & i : m_node_vec)
+		i->pretty_print(os, ident + 1);
+}//pretty_print(os, ident)
 
 }//namespace PL0
 

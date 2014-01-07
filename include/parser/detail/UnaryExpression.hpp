@@ -1,9 +1,7 @@
 #pragma once
 // STL
-#include <iostream>
 #include <memory>
 #include <utility>
-#include <vector>
 // auc
 #include <auc/all.hpp>
 // PL0Compiler
@@ -15,21 +13,23 @@ namespace PL0
 
 class Tokenizer;
 
-class ProgramUnit : public ParserBase
+class UnaryExpression : public ParserBase
 {
 PL0_PUBLIC:
-	ProgramUnit() {}
-	ProgramUnit(const ProgramUnit & rhs) = delete;
-	ProgramUnit(ProgramUnit && rhs) :
+	UnaryExpression() {}
+	UnaryExpression(const UnaryExpression & rhs) = delete;
+	UnaryExpression(UnaryExpression && rhs) :
+		m_unary_op(rhs.m_unary_op),
 		m_node(std::move(rhs.m_node))
 	{}
-	~ProgramUnit() {}
+	~UnaryExpression() {}
 
-	ProgramUnit & operator=(const ProgramUnit & rhs) = delete;
-	ProgramUnit & operator=(ProgramUnit && rhs) {
+	UnaryExpression & operator=(const UnaryExpression & rhs) = delete;
+	UnaryExpression & operator=(UnaryExpression && rhs) {
 		if(this == &rhs)
 			return (*this);
 
+		m_unary_op = rhs.m_unary_op;
 		m_node = std::move(rhs.m_node);
 		return (*this);
 	}//move assignment
@@ -41,8 +41,9 @@ PL0_PUBLIC:
 	pretty_print(std::ostream & os, std::size_t ident) const override;
 
 PL0_PRIVATE:
+	char m_unary_op;
 	std::unique_ptr<ParserBase> m_node;
-};//class ProgramUnit
+};//class UnaryExpression
 
 }//namespace PL0
 

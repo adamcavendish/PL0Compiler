@@ -3,7 +3,7 @@
 #include <iostream>
 #include <memory>
 #include <utility>
-#include <vector>
+#include <string>
 // auc
 #include <auc/all.hpp>
 // PL0Compiler
@@ -15,18 +15,18 @@ namespace PL0
 
 class Tokenizer;
 
-class ProgramUnit : public ParserBase
+class PrimaryExpression : public ParserBase
 {
-PL0_PUBLIC:
-	ProgramUnit() {}
-	ProgramUnit(const ProgramUnit & rhs) = delete;
-	ProgramUnit(ProgramUnit && rhs) :
+PL0_PUBLIC: // functions
+	PrimaryExpression() {}
+	PrimaryExpression(const PrimaryExpression & rhs) = delete;
+	PrimaryExpression(PrimaryExpression && rhs) :
 		m_node(std::move(rhs.m_node))
 	{}
-	~ProgramUnit() {}
+	~PrimaryExpression() {}
 
-	ProgramUnit & operator=(const ProgramUnit & rhs) = delete;
-	ProgramUnit & operator=(ProgramUnit && rhs) {
+	PrimaryExpression & operator=(const PrimaryExpression & rhs) = delete;
+	PrimaryExpression & operator=(PrimaryExpression && rhs) {
 		if(this == &rhs)
 			return (*this);
 
@@ -40,9 +40,9 @@ PL0_PUBLIC:
 	void
 	pretty_print(std::ostream & os, std::size_t ident) const override;
 
-PL0_PRIVATE:
+PL0_PRIVATE: // variables
 	std::unique_ptr<ParserBase> m_node;
-};//class ProgramUnit
+};//class PrimaryExpression
 
 }//namespace PL0
 

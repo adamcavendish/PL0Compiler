@@ -84,10 +84,20 @@ SET(__SRC__
 	src/filebuf/FileBuf.cpp
 	src/tokenizer/Tokenizer.cpp
 	src/tokenizer/WordMap.cpp
+	src/parser/HelperFunctions.cpp
+	src/parser/Parser.cpp
+	src/parser/detail/ProgramUnit.cpp
 	src/parser/detail/BlockUnit.cpp
 	src/parser/detail/ConstDeclStmt.cpp
 	src/parser/detail/ConstVarDecl.cpp
+	src/parser/detail/VarDecl.cpp
 	src/parser/detail/VarDeclStmt.cpp
+	src/parser/detail/IntegerLiteral.cpp
+	src/parser/detail/IdentRefExpression.cpp
+	src/parser/detail/Expression.cpp
+	src/parser/detail/PrimaryExpression.cpp
+	src/parser/detail/UnaryExpression.cpp
+	src/parser/detail/MultiplicativeExpression.cpp
 )
 ADD_EXECUTABLE(${__TARGET_NAME__} ${__SRC__})
 TARGET_LINK_LIBRARIES(${__TARGET_NAME__} gtest gtest_main pthread)

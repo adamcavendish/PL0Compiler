@@ -4,15 +4,9 @@
 #include <iostream>
 #include <memory>
 #include <utility>
-#include <vector>
-// auc
-#include <auc/all.hpp>
 // PL0Compiler
-#include <token.hpp>
 #include <preprocess.hpp>
-#include <parser/HelperFunctions.hpp>
 #include <parser/detail/ParserBase.hpp>
-#include <parser/detail/ProgramUnit.hpp>
 
 namespace PL0
 {
@@ -41,25 +35,15 @@ PL0_PUBLIC:
 		return (*this);
 	}//move assignment
 
-	inline bool
-	parse(std::shared_ptr<Tokenizer> toker) override;
+	bool
+	parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) override;
+
+	void
+	pretty_print(std::ostream & os, std::size_t ident) const override;
 
 PL0_PRIVATE:
 	std::unique_ptr<ParserBase> m_genesis;
 };//class Parser
-
-bool
-Parser::parse(std::shared_ptr<Tokenizer> toker) {
-	auto prog = auc::make_unique<ProgramUnit>();
-	toker->next(); // start tokenizing
-
-	if(prog->parse(toker)) {
-		m_genesis = std::move(prog);
-	} else {
-		return false;
-	}//if-else
-	return true;
-}//parse(toker)
 
 }//namespace PL0
 

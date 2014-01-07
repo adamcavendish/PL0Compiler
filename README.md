@@ -44,18 +44,51 @@ The following is the syntax rules of the model language defined in EBNF:
 
 Parser structure:
 
-	Parser ::=
-		ProgramUnit
-	ProgramUnit ::=
-		BlockUnit "."
-	BlockUnit ::=
-		[ConstDeclStmt] [VarDeclStmt]
-	ConstDeclStmt ::=
-		"const" ConstVarDecl { "," ConstVarDecl } ";"
-	VarDeclStmt ::=
-		"var" VarDecl { "," VarDecl } ";"
-	ConstVarDecl ::=
-		ident "=" number
-	VarDecl ::=
-		ident
+	Parser
+		::= ProgramUnit
+	ProgramUnit
+		::= BlockUnit "."
+	BlockUnit
+		::= [ConstDeclStmt] [VarDeclStmt] { ProcedureDecl BlockUnit ";" } Statement
+	ConstDeclStmt
+		::= "const" ConstVarDecl { "," ConstVarDecl } ";"
+	VarDeclStmt
+		::= "var" VarDecl { "," VarDecl } ";"
+	ConstVarDecl
+		::= ident "=" IntegerLiteral
+	IntegerLiteral
+		::= number
+	VarDecl
+		::= ident
+	ProcedureDecl
+		::= "procedure" ident ";"
+	Statement
+		::= AssignStmt
+		| CallStmt
+		| CompoundStmt
+		| IfStmt
+		| WhileStmt
+	AssignStmt
+		::= ident ":=" Expression
+	CallStmt
+		::=	"call" ident
+	CompoundStmt
+		::= "begin" Statement { ";" Statement } "end"
+	IfStmt
+		::= "if" CondStmt "then" Statement
+	WhileStmt
+		::= "while" CondStmt "do" Statement
+	CondStmt
+		::= "odd" Expression
+		| Expression ("=" | "#" | "<" | "<=" | ">" | ">=") Expression
+	Expression
+		::= MultiplicativeExpression { ("+"|"-") MultiplicativeExpression }
+	MultiplicativeExpression
+		::= UnaryExpression { ("*"|"/") UnaryExpression }
+	UnaryExpression
+		::= ["+"|"-"] PrimaryExpression
+	PrimaryExpression
+		::= IdentRefExpression | IntegerLiteral | "(" Expression ")"
+	IdentRefExpression
+		::= ident
 

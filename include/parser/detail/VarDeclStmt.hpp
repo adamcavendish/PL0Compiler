@@ -37,10 +37,13 @@ PL0_PUBLIC:
 	}//move assignment
 
 	bool
-	parse(std::shared_ptr<Tokenizer> toker) override;
+	parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) override;
+
+	void
+	pretty_print(std::ostream & os, std::size_t ident) const override;
 
 PL0_PRIVATE:
-	std::vector<std::unique_ptr<ParserBase>> m_node_vec;
+	std::vector<std::unique_ptr<ParserBase> > m_node_vec;
 };//class VarDeclStmt
 
 }//namespace PL0

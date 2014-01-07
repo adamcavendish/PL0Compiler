@@ -7,10 +7,8 @@
 // auc
 #include <auc/all.hpp>
 // PL0Compiler
-#include <token.hpp>
 #include <preprocess.hpp>
 #include <parser/detail/ParserBase.hpp>
-#include <parser/HelperFunctions.hpp>
 
 namespace PL0
 {
@@ -37,7 +35,10 @@ PL0_PUBLIC:
 	}//move assignment
 
 	bool
-	parse(std::shared_ptr<Tokenizer> toker) override;
+	parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) override;
+
+	void
+	pretty_print(std::ostream & os, std::size_t ident) const override;
 
 PL0_PRIVATE:
 	std::vector<std::unique_ptr<ParserBase>> m_node_vec;

@@ -5,6 +5,7 @@
 // PL0Compiler
 #include <token.hpp>
 #include <preprocess.hpp>
+#include <tokenizer/Tokenizer.hpp>
 #include <parser/detail/ParserBase.hpp>
 #include <parser/detail/IntegerLiteral.hpp>
 
@@ -12,7 +13,7 @@ namespace PL0
 {
 
 bool
-ConstVarDecl::parse(std::shared_ptr<Tokenizer> toker) {
+ConstVarDecl::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 	m_ident = toker->word();
 
 	toker->next(); // eat the current identifier
@@ -27,7 +28,7 @@ ConstVarDecl::parse(std::shared_ptr<Tokenizer> toker) {
 	if(toker->token() == Token::tk_number) {
 		// make_unique was overlooked by c++11, a simple implementation
 		auto int_num = auc::make_unique<IntegerLiteral>();
-		if(int_num->parse(toker)) {
+		if(int_num->parse(os, toker)) {
 			m_node = std::move(int_num);
 		} else {
 			return false;
@@ -38,7 +39,13 @@ ConstVarDecl::parse(std::shared_ptr<Tokenizer> toker) {
 	}//if-else
 
 	return true;
-}//parser(toker)
+}//parse(os, toker)
+
+void
+ConstVarDecl::pretty_print(std::ostream & os, std::size_t ident) const {
+	os << std::string(ident, '\t') << "ConstVarDecl" << std::endl;
+	m_node->pretty_print(os, ident + 1);
+}//pretty_print(os, ident)
 
 }//namespace PL0
 

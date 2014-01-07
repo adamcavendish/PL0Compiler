@@ -3,6 +3,7 @@
 #include <iostream>
 #include <memory>
 #include <utility>
+#include <string>
 // auc
 #include <auc/all.hpp>
 // PL0Compiler
@@ -13,19 +14,19 @@ namespace PL0
 {
 
 class Tokenizer;
-class IntegerLiteral;
 
-class VarDecl : public ParserBase {
-PL0_PUBLIC:
-	VarDecl() {}
-	VarDecl(const VarDecl & rhs) = delete;
-	VarDecl(VarDecl && rhs) :
+class IdentRefExpression : public ParserBase
+{
+PL0_PUBLIC: // functions
+	IdentRefExpression() {}
+	IdentRefExpression(const IdentRefExpression & rhs) = delete;
+	IdentRefExpression(IdentRefExpression && rhs) :
 		m_ident(std::move(rhs.m_ident))
 	{}
-	~VarDecl() {}
+	~IdentRefExpression() {}
 
-	VarDecl & operator=(const VarDecl & rhs) = delete;
-	VarDecl & operator=(VarDecl && rhs) {
+	IdentRefExpression & operator=(const IdentRefExpression & rhs) = delete;
+	IdentRefExpression & operator=(IdentRefExpression && rhs) {
 		if(this == &rhs)
 			return (*this);
 
@@ -39,12 +40,9 @@ PL0_PUBLIC:
 	void
 	pretty_print(std::ostream & os, std::size_t ident) const override;
 
-PL0_PRIVATE:
-	/**
-	 * @brief m_ident stores the identifier
-	 */
+PL0_PRIVATE: // variables
 	std::string m_ident;
-};//class VarDecl
+};//class IdentRefExpression
 
 }//namespace PL0
 
