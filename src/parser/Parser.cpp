@@ -19,21 +19,25 @@ namespace PL0
 
 bool
 Parser::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
-	auto prog = auc::make_unique<ProgramUnit>();
+	bool flag = true;
+
 	toker->next(); // start tokenizing
 
-	if(prog->parse(os, toker)) {
-		m_genesis = std::move(prog);
-	} else {
-		return false;
-	}//if-else
-	return true;
+	auto prog = auc::make_unique<ProgramUnit>();
+	if(!prog->parse(os, toker))
+		flag = false;
+
+	m_genesis = std::move(prog);
+
+	return flag;
 }//parse(os, toker)
 
 void
 Parser::pretty_print(std::ostream & os, std::size_t ident) const {
 	os << std::string(ident, '\t') << "Translation Unit" << std::endl;
-	m_genesis->pretty_print(os, ident + 1);
+
+	if(m_genesis)
+		m_genesis->pretty_print(os, ident + 1);
 }//pretty_print(os, ident)
 
 }//namespace PL0

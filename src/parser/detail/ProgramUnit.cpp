@@ -22,11 +22,9 @@ ProgramUnit::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 
 	auto block = auc::make_unique<BlockUnit>();
 
-	if(block->parse(os, toker)) {
-		m_node = std::move(block);
-	} else {
+	if(!block->parse(os, toker))
 		flag = false;
-	}//if-else
+	m_node = std::move(block);
 
 	if(flag == true && toker->token() == Token::tk_period) {
 		toker->next(); // eat '.' token
@@ -41,7 +39,9 @@ ProgramUnit::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 void
 ProgramUnit::pretty_print(std::ostream & os, std::size_t ident) const {
 	os << std::string(ident, '\t') << "ProgramUnit" << std::endl;
-	m_node->pretty_print(os, ident + 1);
+
+	if(m_node)
+		m_node->pretty_print(os, ident + 1);
 }//pretty_print(os, ident)
 
 }//namespace PL0

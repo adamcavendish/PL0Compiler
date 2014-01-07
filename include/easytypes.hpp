@@ -2,7 +2,7 @@
 
 namespace PL0 {
 
-using priority = int;
+using precedence = int;
 
 }//namespacd PL0
 

@@ -24,15 +24,14 @@ Expression::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 
 	if(flag == true) {
 		auto multi = auc::make_unique<MultiplicativeExpression>();
-		if(multi->parse(os, toker)) {
-			m_node_first = std::move(multi);
-		} else {
+		if(!multi->parse(os, toker))
 			flag = false;
-		}//if-else
+		m_node_first = std::move(multi);
 	}//if
 
 	while(flag == true) {
-		std::pair<Operator, std::unique_ptr<ParserBase>> node;
+		std::pair<Operator, std::unique_ptr<ParserBase> > node;
+
 		if(toker->token() == Token::tk_plus) {
 			node.first = '+';
 		} else if(toker->token() == Token::tk_minus) {
@@ -40,15 +39,14 @@ Expression::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 		} else {
 			break;
 		}//if-else
-
 		toker->next(); // Eat the current operator
+
 		auto multi = auc::make_unique<MultiplicativeExpression>();
-		if(multi->parse(os, toker)) {
-			node.second = std::move(multi);
-			m_nodes.push_back(std::move(node));
-		} else {
+		if(!multi->parse(os, toker))
 			flag = false;
-		}//if-else
+
+		node.second = std::move(multi);
+		m_nodes.push_back(std::move(node));
 	}//while
 
 	return flag;
@@ -61,20 +59,25 @@ Expression::pretty_print(std::ostream & os, std::size_t ident) const {
 			<< "Binary Operator '" << m_nodes[rec].first << "'" << std::endl;
 
 		if(rec == 0) {
-			m_node_first->pretty_print(os, rec_ident);
-			m_nodes[0].second->pretty_print(os, rec_ident);
+			if(m_node_first)
+				m_node_first->pretty_print(os, rec_ident);
+			if(m_nodes[0].second)
+				m_nodes[0].second->pretty_print(os, rec_ident);
 			return;
 		}//if
 
 		print_helper(rec-1, rec_ident+1);
-		m_nodes[rec].second->pretty_print(os, rec_ident);
+
+		if(m_nodes[rec].second)
+			m_nodes[rec].second->pretty_print(os, rec_ident);
 	};//lambda print_helper(rec)
 
 	auto sz = m_nodes.size();
 	if(sz > 0) {
 		print_helper(sz - 1, ident);
 	} else {
-		m_node_first->pretty_print(os, ident);
+		if(m_node_first)
+			m_node_first->pretty_print(os, ident);
 	}//if-else
 }//pretty_print(os, ident)
 

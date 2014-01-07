@@ -27,11 +27,12 @@ ConstDeclStmt::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 
 	while(true) {
 		auto cvar = auc::make_unique<ConstVarDecl>();
-		if(cvar->parse(os, toker)) {
-			m_node_vec.push_back(std::move(cvar));
-		} else {
+		if(!cvar->parse(os, toker)) {
 			flag = false;
+			m_node_vec.push_back(std::move(cvar));
 			break;
+		} else {
+			m_node_vec.push_back(std::move(cvar));
 		}//if-else
 
 		if(toker->token() == Token::tk_comma) {
@@ -54,8 +55,11 @@ ConstDeclStmt::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 void
 ConstDeclStmt::pretty_print(std::ostream & os, std::size_t ident) const {
 	os << std::string(ident, '\t') << "ConstDeclStmt" << std::endl;
-	for(const auto & i : m_node_vec)
-		i->pretty_print(os, ident + 1);
+
+	for(const auto & i : m_node_vec) {
+		if(i)
+			i->pretty_print(os, ident + 1);
+	}//for
 }//pretty_print(os, ident)
 
 }//namespace PL0

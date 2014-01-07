@@ -24,29 +24,23 @@ BlockUnit::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 
 	if(toker->token() == Token::tk_const) {
 		auto cdecl = auc::make_unique<ConstDeclStmt>();
-		if(cdecl->parse(os, toker)) {
-			m_const_decl_stmt = std::move(cdecl);
-		} else {
+		if(!cdecl->parse(os, toker))
 			flag = false;
-		}//if-else
+		m_const_decl_stmt = std::move(cdecl);
 	}//if
 	
 	if(toker->token() == Token::tk_var) {
 		auto vdecl = auc::make_unique<VarDeclStmt>();
-		if(vdecl->parse(os, toker)) {
-			m_var_decl_stmt = std::move(vdecl);
-		} else {
+		if(!vdecl->parse(os, toker))
 			flag = false;
-		}//if-else
+		m_var_decl_stmt = std::move(vdecl);
 	}//if-else
 
 	// @TODO grammar is not complete
 	auto expr = auc::make_unique<Expression>();
-	if(expr->parse(os, toker)) {
-		m_expr = std::move(expr);
-	} else {
+	if(!expr->parse(os, toker))
 		flag = false;
-	}//if-else
+	m_expr = std::move(expr);
 	
 	return flag;
 }//parse(os, toker)
@@ -54,10 +48,14 @@ BlockUnit::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 void
 BlockUnit::pretty_print(std::ostream & os, std::size_t ident) const {
 	os << std::string(ident, '\t') << "BlockUnit" << std::endl;
-	m_const_decl_stmt->pretty_print(os, ident + 1);
-	m_var_decl_stmt->pretty_print(os, ident + 1);
+	
+	if(m_const_decl_stmt)
+		m_const_decl_stmt->pretty_print(os, ident + 1);
+	if(m_var_decl_stmt)
+		m_var_decl_stmt->pretty_print(os, ident + 1);
 
-	m_expr->pretty_print(os, ident + 1);
+	if(m_expr)
+		m_expr->pretty_print(os, ident + 1);
 }//pretty_print(os, ident)
 
 }//namespace PL0

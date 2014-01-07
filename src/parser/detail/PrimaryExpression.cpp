@@ -24,27 +24,24 @@ PrimaryExpression::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 
 	if(toker->token() == Token::tk_identifier) {
 		auto ident = auc::make_unique<IdentRefExpression>();
-		if(ident->parse(os, toker)) {
-			m_node = std::move(ident);
-		} else {
+		if(!ident->parse(os, toker))
 			flag = false;
-		}//if-else
+
+		m_node = std::move(ident);
 	} else if(toker->token() == Token::tk_number) {
 		auto num = auc::make_unique<IntegerLiteral>();
-		if(num->parse(os, toker)) {
-			m_node = std::move(num);
-		} else {
+		if(!num->parse(os, toker))
 			flag =false;
-		}//if-else
+
+		m_node = std::move(num);
 	} else if(toker->token() == Token::tk_lparenthesis) {
 		toker->next(); // eat the '('
 
 		auto expr = auc::make_unique<Expression>();
-		if(expr->parse(os, toker)) {
-			m_node = std::move(expr);
-		} else {
+		if(!expr->parse(os, toker))
 			flag = false;
-		}//if-else
+
+		m_node = std::move(expr);
 
 		if(toker->token() != Token::tk_rparenthesis) {
 			parse_error(toker, "Expect a ')' here.");
@@ -61,7 +58,8 @@ PrimaryExpression::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 
 void
 PrimaryExpression::pretty_print(std::ostream & os, std::size_t ident) const {
-	m_node->pretty_print(os, ident + 1);
+	if(m_node)
+		m_node->pretty_print(os, ident + 1);
 }//pretty_print(os, ident)
 
 }//namespace PL0

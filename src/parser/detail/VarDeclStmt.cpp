@@ -24,26 +24,35 @@ VarDeclStmt::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 
 	while(true) {
 		auto var = auc::make_unique<VarDecl>();
-		if(var->parse(os, toker)) {
-			m_node_vec.push_back(std::move(var));
-		} else {
-			flag = false;
-			break;
-		}//if-else
+		if(toker->token() == Token::tk_identifier) {
+			if(var->parse(os, toker)) {
+				m_node_vec.push_back(std::move(var));
+			} else {
+				m_node_vec.push_back(std::move(var));
+				flag = false;
+				break;
+			}//if-else
 
-		if(toker->token() == Token::tk_comma) {
-			toker->next(); // eat ',' token
+			if(toker->token() == Token::tk_comma) {
+				toker->next(); // eat ',' token
+			} else {
+				break;
+			}//if-else
 		} else {
+			parse_error(toker, "A identifier token expected.");
+			flag = false;
 			break;
 		}//if-else
 	}//while
 
-	if(flag == true && toker->token() == Token::tk_semicolon) {
-		toker->next(); // eat ';' token
-	} else {
-		parse_error(toker, "A variable declaration statement must end with a ';'");
-		flag = false;
-	}//if-else
+	if(flag == true) {
+		if(toker->token() == Token::tk_semicolon) {
+			toker->next(); // eat ';' token
+		} else {
+			parse_error(toker, "A variable declaration statement must end with a ';'");
+			flag = false;
+		}//if-else
+	}//if
 
 	return flag;
 }//parse(os, toker)

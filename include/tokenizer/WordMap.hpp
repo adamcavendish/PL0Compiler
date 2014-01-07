@@ -38,7 +38,7 @@ public://function
 private://members
 	const std::unordered_map<std::string, Token> m_word_map;
 	const std::string m_operator_pool;
-	const std::unordered_map<std::string, std::pair<Token, priority> > m_operator_map;
+	const std::unordered_map<std::string, std::pair<Token, precedence> > m_operator_map;
 	const std::string m_othersym_pool;
 	const std::unordered_map<std::string, Token> m_othersym_map;
 };//class WordMap

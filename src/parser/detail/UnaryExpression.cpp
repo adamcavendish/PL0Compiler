@@ -22,18 +22,18 @@ UnaryExpression::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 
 	if(toker->token() == Token::tk_plus) {
 		m_unary_op = '+';
+		toker->next();
 	} else if(toker->token() == Token::tk_minus) {
 		m_unary_op = '-';
+		toker->next();
 	} else {
 		m_unary_op = '\0';
 	}//if-else
 
 	auto prim = auc::make_unique<PrimaryExpression>();
-	if(prim->parse(os, toker)) {
-		m_node = std::move(prim);
-	} else {
+	if(!prim->parse(os, toker))
 		flag = false;
-	}//if-else
+	m_node = std::move(prim);
 
 	return flag;
 }//parse(os, toker)
@@ -42,7 +42,9 @@ void
 UnaryExpression::pretty_print(std::ostream & os, std::size_t ident) const {
 	if(m_unary_op != '\0')
 		os << std::string(ident, '\t') << "UnaryExpression '" << m_unary_op << "'" << std::endl;
-	m_node->pretty_print(os, ident);
+
+	if(m_node)
+		m_node->pretty_print(os, ident);
 }//pretty_print(os, ident)
 
 }//namespace PL0

@@ -1,6 +1,8 @@
 #include <tokenizer/Tokenizer.hpp>
 
+// STL
 #include <iostream>
+#include <string>
 
 namespace PL0 {
 
@@ -83,15 +85,33 @@ void Tokenizer::extractTokenDigit() {
 }//extractTokenDigit()
 
 void Tokenizer::extractTokenOperator() {
+	const static std::string one_char_operator("+-*/=#()");
+	const static std::string two_char_operator("<>");
+
 	m_cur_tokword.clear();
 
 	char ch = m_pfb->get();
-	while(m_pwordmap->is_operator(ch)) {
-		m_pfb->bump();
+
+	if(one_char_operator.find(ch) != std::string::npos) {
+		// if it is one_char_operator
 		m_cur_tokword += ch;
+		m_pfb->bump();
+	} else if(two_char_operator.find(ch) != std::string::npos) {
+		// if it is two_char_operator
+		m_cur_tokword += ch;
+		m_pfb->bump();
 
 		ch = m_pfb->get();
-	}//while
+		m_pfb->bump();
+		m_cur_tokword += ch;
+	} else {
+		while(m_pwordmap->is_operator(ch)) {
+			m_cur_tokword += ch;
+			m_pfb->bump();
+
+			ch = m_pfb->get();
+		}//while
+	}//if-else
 
 	// if it's not an preserved operator, it must be an error
 	if(m_pwordmap->get_op_token(m_cur_tokword, m_cur_tok) == false)
@@ -102,12 +122,19 @@ void Tokenizer::extractTokenOther() {
 	m_cur_tokword.clear();
 
 	char ch = m_pfb->get();
-	while(m_pwordmap->is_othersym(ch)) {
-		m_pfb->bump();
+	if(ch == ':') {
+		// possibly a ':=' token
 		m_cur_tokword += ch;
+		m_pfb->bump();
 
 		ch = m_pfb->get();
-	}//while
+		m_pfb->bump();
+		m_cur_tokword += ch;
+	} else {
+		// normal othersym
+		m_cur_tokword += ch;
+		m_pfb->bump();
+	}//if-else
 
 	// if it's not an preserved othersym, it must be an error
 	if(m_pwordmap->get_othersym_token(m_cur_tokword, m_cur_tok) == false)

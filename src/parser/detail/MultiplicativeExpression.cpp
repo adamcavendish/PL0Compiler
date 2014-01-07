@@ -22,15 +22,14 @@ MultiplicativeExpression::parse(std::ostream & os, std::shared_ptr<Tokenizer> to
 
 	if(flag == true) {
 		auto unary = auc::make_unique<UnaryExpression>();
-		if(unary->parse(os, toker)) {
-			m_node_first = std::move(unary);
-		} else {
+		if(!unary->parse(os, toker))
 			flag = false;
-		}//if-else
+		m_node_first = std::move(unary);
 	}//if
 
 	while(flag == true) {
 		std::pair<Operator, std::unique_ptr<ParserBase>> node;
+
 		if(toker->token() == Token::tk_multiply) {
 			node.first = '*';
 		} else if(toker->token() == Token::tk_divide) {
@@ -38,15 +37,14 @@ MultiplicativeExpression::parse(std::ostream & os, std::shared_ptr<Tokenizer> to
 		} else {
 			break;
 		}//if-else
-
 		toker->next(); // Eat the current operator
+
 		auto unary = auc::make_unique<UnaryExpression>();
-		if(unary->parse(os, toker)) {
+		if(!unary->parse(os, toker))
+			flag = false;
+
 			node.second = std::move(unary);
 			m_nodes.push_back(std::move(node));
-		} else {
-			flag = false;
-		}//if-else
 	}//while
 
 	return flag;
@@ -59,20 +57,25 @@ MultiplicativeExpression::pretty_print(std::ostream & os, std::size_t ident) con
 			<< "Binary Operator '" << m_nodes[rec].first << "'" << std::endl;
 
 		if(rec == 0) {
-			m_node_first->pretty_print(os, rec_ident);
-			m_nodes[0].second->pretty_print(os, rec_ident);
+			if(m_node_first)
+				m_node_first->pretty_print(os, rec_ident);
+			if(m_nodes[0].second)
+				m_nodes[0].second->pretty_print(os, rec_ident);
 			return;
 		}//if
 
 		print_helper(rec-1, rec_ident+1);
-		m_nodes[rec].second->pretty_print(os, rec_ident);
+
+		if(m_nodes[rec].second)
+			m_nodes[rec].second->pretty_print(os, rec_ident);
 	};//lambda print_helper(rec)
 
 	auto sz = m_nodes.size();
 	if(sz > 0) {
 		print_helper(sz - 1, ident);
 	} else {
-		m_node_first->pretty_print(os, ident);
+		if(m_node_first)
+			m_node_first->pretty_print(os, ident);
 	}//if-else
 }//pretty_print(os, ident)
 

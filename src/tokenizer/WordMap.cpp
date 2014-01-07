@@ -18,27 +18,27 @@ WordMap::WordMap() :
 			{ "while",		Token::tk_while			},
 			{ "write",		Token::tk_write			}
 	}),
-	m_operator_pool("+-*/=#<>:()"),
+	m_operator_pool("+-*/=#<>()"),
 	m_operator_map({
-			{ "+",			{ Token::tk_plus,			priority(10)	}	},
-			{ "-",			{ Token::tk_minus,			priority(10)	}	},
-			{ "*",			{ Token::tk_multiply,		priority(20)	}	},
-			{ "/",			{ Token::tk_divide,			priority(20)	}	},
-			{ "=",			{ Token::tk_equal,			priority(10)	}	},
-			{ "#",			{ Token::tk_notequal,		priority(10)	}	},
-			{ "<",			{ Token::tk_less,			priority(10)	}	},
-			{ "<=",			{ Token::tk_lessequal,		priority(10)	}	},
-			{ ">",			{ Token::tk_greater,		priority(10)	}	},
-			{ ">=",			{ Token::tk_greaterequal,	priority(10)	}	},
-			{ ":=",			{ Token::tk_assign,			priority(10)	}	},
-			{ "(",			{ Token::tk_lparenthesis,	priority(10)	}	},
-			{ ")",			{ Token::tk_rparenthesis,	priority(10)	}	}
+			{ "+",			{ Token::tk_plus,			precedence(20)	}	},
+			{ "-",			{ Token::tk_minus,			precedence(20)	}	},
+			{ "*",			{ Token::tk_multiply,		precedence(30)	}	},
+			{ "/",			{ Token::tk_divide,			precedence(30)	}	},
+			{ "=",			{ Token::tk_equal,			precedence(10)	}	},
+			{ "#",			{ Token::tk_notequal,		precedence(10)	}	},
+			{ "<",			{ Token::tk_less,			precedence(10)	}	},
+			{ "<=",			{ Token::tk_lessequal,		precedence(10)	}	},
+			{ ">",			{ Token::tk_greater,		precedence(10)	}	},
+			{ ">=",			{ Token::tk_greaterequal,	precedence(10)	}	},
+			{ "(",			{ Token::tk_lparenthesis,	precedence(40)	}	},
+			{ ")",			{ Token::tk_rparenthesis,	precedence(40)	}	}
 	}),
-	m_othersym_pool(",;."),
+	m_othersym_pool(",;.:"),
 	m_othersym_map({
 			{ ",",			Token::tk_comma			},
-			{ ";",			Token::tk_semicolon,	},
-			{ ".",			Token::tk_period,		},
+			{ ";",			Token::tk_semicolon		},
+			{ ".",			Token::tk_period		},
+			{ ":=",			Token::tk_assign		},
 	})
 {}
 
