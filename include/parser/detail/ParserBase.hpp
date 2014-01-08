@@ -55,6 +55,15 @@ PL0_PUBLIC:
 	 */
 	virtual
 	~ParserBase() {}
+
+	inline std::string
+	position_str() const
+	{ return ("<" + std::to_string(m_position.first) + "," + std::to_string(m_position.second) + ">"); }
+PL0_PROTECTED:
+	/**
+	 * @brief m_position indicates the column and the position of the current Token
+	 */
+	std::pair<std::size_t, std::size_t> m_position;
 };//class ParserBase
 
 }//namespace PL0

@@ -20,6 +20,7 @@ namespace PL0
 
 bool
 IntegerLiteral::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
+	m_position = toker->position();
 	bool flag = true;
 
 	try {
@@ -43,7 +44,8 @@ IntegerLiteral::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 
 void
 IntegerLiteral::pretty_print(std::ostream & os, std::size_t ident) const {
-	os << std::string(ident, '\t') << "IntegerLiteral '" << m_value << "'" << std::endl;
+	os << std::string(ident, '\t') << "IntegerLiteral "
+		<< this->position_str() << " '" << m_value << "'" << std::endl;
 }//pretty_print(os, ident)
 
 }//namespace PL0

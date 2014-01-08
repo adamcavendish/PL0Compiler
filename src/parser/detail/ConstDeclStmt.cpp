@@ -21,6 +21,7 @@ class Tokenizer;
 
 bool
 ConstDeclStmt::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
+	m_position = toker->position();
 	bool flag = true;
 
 	toker->next(); // eat 'const' token
@@ -54,11 +55,11 @@ ConstDeclStmt::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 
 void
 ConstDeclStmt::pretty_print(std::ostream & os, std::size_t ident) const {
-	os << std::string(ident, '\t') << "ConstDeclStmt" << std::endl;
+	os << std::string(ident, '\t') << "ConstDeclStmt " << this->position_str() << std::endl;
 
 	for(const auto & i : m_node_vec) {
 		if(i)
-			i->pretty_print(os, ident + 1);
+			i->pretty_print(os, ident+1);
 	}//for
 }//pretty_print(os, ident)
 

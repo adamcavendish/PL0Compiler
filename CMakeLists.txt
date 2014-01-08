@@ -1,8 +1,8 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 SET(CMAKE_CXX_COMPILER g++-4.8)
-# SET(CMAKE_CXX_FLAGS "-std=c++11 -Wall -march=native -flto -O3")
-SET(CMAKE_CXX_FLAGS "-std=c++11 -g3 -gdwarf-2 -Wall -march=native")
+SET(CMAKE_CXX_FLAGS_RELEASE "-std=c++11 -Wall -march=native -flto -O3 ${CMAKE_CXX_FLAGS_RELEASE}")
+SET(CMAKE_CXX_FLAGS_DEBUG "-DNDEBUG -std=c++11 -g3 -gdwarf-2 -Wall -march=native ${CMAKE_CXX_FLAGS_DEBUG}")
 
 # --------------------------------------------------
 # Add gtest

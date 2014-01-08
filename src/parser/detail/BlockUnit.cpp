@@ -20,6 +20,7 @@ namespace PL0 {
 
 bool
 BlockUnit::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
+	m_position = toker->position();
 	bool flag = true;
 
 	if(toker->token() == Token::tk_const) {
@@ -47,15 +48,15 @@ BlockUnit::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 
 void
 BlockUnit::pretty_print(std::ostream & os, std::size_t ident) const {
-	os << std::string(ident, '\t') << "BlockUnit" << std::endl;
+	os << std::string(ident, '\t') << "BlockUnit " << this->position_str() << std::endl;
 	
 	if(m_const_decl_stmt)
-		m_const_decl_stmt->pretty_print(os, ident + 1);
+		m_const_decl_stmt->pretty_print(os, ident+1);
 	if(m_var_decl_stmt)
-		m_var_decl_stmt->pretty_print(os, ident + 1);
+		m_var_decl_stmt->pretty_print(os, ident+1);
 
 	if(m_expr)
-		m_expr->pretty_print(os, ident + 1);
+		m_expr->pretty_print(os, ident+1);
 }//pretty_print(os, ident)
 
 }//namespace PL0

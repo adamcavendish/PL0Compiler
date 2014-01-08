@@ -18,6 +18,7 @@ namespace PL0
 
 bool
 ProgramUnit::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
+	m_position = toker->position();
 	bool flag = true;
 
 	auto block = auc::make_unique<BlockUnit>();
@@ -38,10 +39,10 @@ ProgramUnit::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 
 void
 ProgramUnit::pretty_print(std::ostream & os, std::size_t ident) const {
-	os << std::string(ident, '\t') << "ProgramUnit" << std::endl;
+	os << std::string(ident, '\t') << "ProgramUnit " << this->position_str() << std::endl;
 
 	if(m_node)
-		m_node->pretty_print(os, ident + 1);
+		m_node->pretty_print(os, ident+1);
 }//pretty_print(os, ident)
 
 }//namespace PL0

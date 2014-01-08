@@ -14,40 +14,41 @@ namespace PL0
 
 bool
 ConstVarDecl::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
+	m_position = toker->position();
+	bool flag = true;
+
 	m_ident = toker->word();
 
 	toker->next(); // eat the current identifier
 
 	if(toker->token() != Token::tk_equal) {
 		parse_error(toker, "expect an '=' here for const identifier initialization");
-		return false;
+		flag = false;
 	} else {
-		toker->next();
+		toker->next(); // eat the current '='
 	}//if-else
 
-	if(toker->token() == Token::tk_number) {
+	if(flag == true && toker->token() == Token::tk_number) {
 		// make_unique was overlooked by c++11, a simple implementation
 		auto int_num = auc::make_unique<IntegerLiteral>();
-		if(!int_num->parse(os, toker)) {
-			m_node = std::move(int_num);
-			return false;
-		} else {
-			m_node = std::move(int_num);
-		}//if-else
+		if(!int_num->parse(os, toker))
+			flag = false;
+		m_node = std::move(int_num);
 	} else {
 		parse_error(toker, "A const declearation must be initialized with a integer number.");
-		return false;
+		flag = false;
 	}//if-else
 
-	return true;
+	return flag;
 }//parse(os, toker)
 
 void
 ConstVarDecl::pretty_print(std::ostream & os, std::size_t ident) const {
-	os << std::string(ident, '\t') << "ConstVarDecl '" << m_ident << "'" << std::endl;
+	os << std::string(ident, '\t') << "ConstVarDecl "
+		<< this->position_str() << " '" << m_ident << "'" << std::endl;
 
 	if(m_node)
-		m_node->pretty_print(os, ident + 1);
+		m_node->pretty_print(os, ident+1);
 }//pretty_print(os, ident)
 
 }//namespace PL0

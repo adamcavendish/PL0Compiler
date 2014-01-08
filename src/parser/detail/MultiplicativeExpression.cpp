@@ -18,6 +18,7 @@ namespace PL0
 
 bool
 MultiplicativeExpression::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
+	m_position = toker->position();
 	bool flag = true;
 
 	if(flag == true) {
@@ -31,9 +32,11 @@ MultiplicativeExpression::parse(std::ostream & os, std::shared_ptr<Tokenizer> to
 		std::pair<Operator, std::unique_ptr<ParserBase>> node;
 
 		if(toker->token() == Token::tk_multiply) {
-			node.first = '*';
+			node.first.m_op = '*';
+			node.first.m_position = toker->position();
 		} else if(toker->token() == Token::tk_divide) {
-			node.first = '/';
+			node.first.m_op = '/';
+			node.first.m_position = toker->position();
 		} else {
 			break;
 		}//if-else
@@ -52,27 +55,33 @@ MultiplicativeExpression::parse(std::ostream & os, std::shared_ptr<Tokenizer> to
 
 void
 MultiplicativeExpression::pretty_print(std::ostream & os, std::size_t ident) const {
+#ifndef NDEBUG
+	os << std::string(ident, '\t') << "MultiplicativeExpression(debug) " << this->position_str() << std::endl;
+#endif//NDEBUG
+
 	std::function<void(int, std::size_t)> print_helper = [&](int rec, std::size_t rec_ident) {
 		os << std::string(rec_ident, '\t')
-			<< "Binary Operator '" << m_nodes[rec].first << "'" << std::endl;
+			<< "Binary Operator <" << m_nodes[rec].first.m_position.first << ","
+			<< m_nodes[rec].first.m_position.second << ">"
+			<< " '" << m_nodes[rec].first.m_op << "'" << std::endl;
 
 		if(rec == 0) {
 			if(m_node_first)
-				m_node_first->pretty_print(os, rec_ident);
+				m_node_first->pretty_print(os, rec_ident+1);
 			if(m_nodes[0].second)
-				m_nodes[0].second->pretty_print(os, rec_ident);
+				m_nodes[0].second->pretty_print(os, rec_ident+1);
 			return;
 		}//if
 
 		print_helper(rec-1, rec_ident+1);
 
 		if(m_nodes[rec].second)
-			m_nodes[rec].second->pretty_print(os, rec_ident);
+			m_nodes[rec].second->pretty_print(os, rec_ident+1);
 	};//lambda print_helper(rec)
 
 	auto sz = m_nodes.size();
 	if(sz > 0) {
-		print_helper(sz - 1, ident);
+		print_helper(sz-1, ident);
 	} else {
 		if(m_node_first)
 			m_node_first->pretty_print(os, ident);

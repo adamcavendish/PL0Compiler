@@ -18,6 +18,7 @@ namespace PL0
 
 bool
 UnaryExpression::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
+	m_position = toker->position();
 	bool flag = true;
 
 	if(toker->token() == Token::tk_plus) {
@@ -40,11 +41,19 @@ UnaryExpression::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 
 void
 UnaryExpression::pretty_print(std::ostream & os, std::size_t ident) const {
-	if(m_unary_op != '\0')
-		os << std::string(ident, '\t') << "UnaryExpression '" << m_unary_op << "'" << std::endl;
+#ifndef NDEBUG
+	os << std::string(ident, '\t') << "UnaryExpression(debug) " << this->position_str() << std::endl;
+#endif//NDEBUG
 
-	if(m_node)
-		m_node->pretty_print(os, ident);
+	if(m_unary_op != '\0') {
+		os << std::string(ident, '\t') << "UnaryExpression "
+			<< this->position_str() << " '" << m_unary_op << "'" << std::endl;
+		if(m_node)
+			m_node->pretty_print(os, ident+1);
+	} else {
+		if(m_node)
+			m_node->pretty_print(os, ident);
+	}//if-else
 }//pretty_print(os, ident)
 
 }//namespace PL0

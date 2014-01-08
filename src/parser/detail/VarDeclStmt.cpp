@@ -18,6 +18,7 @@ namespace PL0
 
 bool
 VarDeclStmt::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
+	m_position = toker->position();
 	bool flag = true;
 
 	toker->next(); // eat 'var' token
@@ -59,7 +60,7 @@ VarDeclStmt::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 
 void
 VarDeclStmt::pretty_print(std::ostream & os, std::size_t ident) const {
-	os << std::string(ident, '\t') << "VarDeclStmt" << std::endl;
+	os << std::string(ident, '\t') << "VarDeclStmt " << this->position_str() << std::endl;
 	for(const auto & i : m_node_vec)
 		i->pretty_print(os, ident + 1);
 }//pretty_print(os, ident)

@@ -17,14 +17,18 @@ namespace PL0
 
 bool
 VarDecl::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
+	m_position = toker->position();
+
 	m_ident = toker->word();
 	toker->next(); // eat the current identifier
+
 	return true;
 }//parse(os, toker)
 
 void
 VarDecl::pretty_print(std::ostream & os, std::size_t ident) const {
-	os << std::string(ident, '\t') << "VarDecl '" << m_ident << "'" << std::endl;
+	os << std::string(ident, '\t') << "VarDecl "
+		<< this->position_str() << " '" << m_ident << "'" << std::endl;
 }//pretty_print(os, ident)
 
 }//namespace PL0

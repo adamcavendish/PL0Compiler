@@ -41,7 +41,7 @@ PL0_PUBLIC:
 	pretty_print(std::ostream & os, std::size_t ident) const override;
 
 PL0_PRIVATE:
-	std::vector<std::unique_ptr<ParserBase>> m_node_vec;
+	std::vector<std::unique_ptr<ParserBase> > m_node_vec;
 };//class ConstDeclStmt
 
 }//namespace PL0

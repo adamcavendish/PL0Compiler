@@ -17,6 +17,8 @@ namespace PL0
 
 bool
 IdentRefExpression::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
+	m_position = toker->position();
+
 	m_ident = toker->word();
 	return true;
 }//parse(os, toker)

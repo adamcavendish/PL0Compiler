@@ -20,6 +20,7 @@ namespace PL0
 
 bool
 PrimaryExpression::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
+	m_position = toker->position();
 	bool flag = true;
 
 	if(toker->token() == Token::tk_identifier) {
@@ -58,8 +59,12 @@ PrimaryExpression::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 
 void
 PrimaryExpression::pretty_print(std::ostream & os, std::size_t ident) const {
+#ifndef NDEBUG
+	os << std::string(ident, '\t') << "PrimaryExpression(debug) " << this->position_str() << std::endl;
+#endif//NDEBUG
+
 	if(m_node)
-		m_node->pretty_print(os, ident + 1);
+		m_node->pretty_print(os, ident);
 }//pretty_print(os, ident)
 
 }//namespace PL0

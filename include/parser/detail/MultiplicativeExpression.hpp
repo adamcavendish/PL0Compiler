@@ -43,7 +43,10 @@ PL0_PUBLIC:
 	pretty_print(std::ostream & os, std::size_t ident) const override;
 
 PL0_PRIVATE:
-	using Operator = char;
+	struct Operator {
+		char m_op;
+		std::pair<std::size_t, std::size_t> m_position;
+	};//struct Operator
 
 	std::unique_ptr<ParserBase> m_node_first;
 	std::vector<std::pair<Operator, std::unique_ptr<ParserBase> > > m_nodes;
