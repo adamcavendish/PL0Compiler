@@ -34,7 +34,7 @@ Parser::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 
 void
 Parser::pretty_print(std::ostream & os, std::size_t indent) const {
-	os << std::string(indent, '\t') << "Translation Unit" << std::endl;
+	os << std::string(indent, '\t') << "TranslationUnit" << std::endl;
 
 	if(m_genesis)
 		m_genesis->pretty_print(os, indent + 1);

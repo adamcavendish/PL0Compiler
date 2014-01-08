@@ -63,7 +63,7 @@ Expression::pretty_print(std::ostream & os, std::size_t indent) const {
 
 	std::function<void(int, std::size_t)> print_helper = [&](int rec, std::size_t rec_indent) {
 		os << std::string(rec_indent, '\t')
-			<< "Binary Operator <" << m_nodes[rec].first.m_position.first
+			<< "BinaryOperator <" << m_nodes[rec].first.m_position.first
 			<< "," << m_nodes[rec].first.m_position.second
 			<< "> '" << m_nodes[rec].first.m_op << "'" << std::endl;
 
