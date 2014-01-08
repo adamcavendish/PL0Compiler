@@ -40,7 +40,7 @@ VarDeclStmt::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 				break;
 			}//if-else
 		} else {
-			parse_error(toker, "A identifier token expected.");
+			parse_error(os, toker, "A identifier token expected.");
 			flag = false;
 			break;
 		}//if-else
@@ -50,7 +50,7 @@ VarDeclStmt::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 		if(toker->token() == Token::tk_semicolon) {
 			toker->next(); // eat ';' token
 		} else {
-			parse_error(toker, "A variable declaration statement must end with a ';'");
+			parse_error(os, toker, "A variable declaration statement must end with a ';'");
 			flag = false;
 		}//if-else
 	}//if
@@ -59,11 +59,11 @@ VarDeclStmt::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 }//parse(os, toker)
 
 void
-VarDeclStmt::pretty_print(std::ostream & os, std::size_t ident) const {
-	os << std::string(ident, '\t') << "VarDeclStmt " << this->position_str() << std::endl;
+VarDeclStmt::pretty_print(std::ostream & os, std::size_t indent) const {
+	os << std::string(indent, '\t') << "VarDeclStmt " << this->position_str() << std::endl;
 	for(const auto & i : m_node_vec)
-		i->pretty_print(os, ident + 1);
-}//pretty_print(os, ident)
+		i->pretty_print(os, indent + 1);
+}//pretty_print(os, indent)
 
 }//namespace PL0
 

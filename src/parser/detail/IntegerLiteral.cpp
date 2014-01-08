@@ -26,10 +26,10 @@ IntegerLiteral::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 	try {
 		m_value = std::stoi(toker->word());
 	} catch(std::invalid_argument & e) {
-		parse_error(toker, "Invalid Number format");
+		parse_error(os, toker, "Invalid Number format");
 		flag = false;
 	} catch(std::out_of_range & e) {
-		parse_error(toker, "Number out of range. limit: ["
+		parse_error(os, toker, "Number out of range. limit: ["
 				+ std::to_string(std::numeric_limits<int>::min())
 				+ ", "
 				+ std::to_string(std::numeric_limits<int>::max())
@@ -43,10 +43,10 @@ IntegerLiteral::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 }//parse(os, toker)
 
 void
-IntegerLiteral::pretty_print(std::ostream & os, std::size_t ident) const {
-	os << std::string(ident, '\t') << "IntegerLiteral "
+IntegerLiteral::pretty_print(std::ostream & os, std::size_t indent) const {
+	os << std::string(indent, '\t') << "IntegerLiteral "
 		<< this->position_str() << " '" << m_value << "'" << std::endl;
-}//pretty_print(os, ident)
+}//pretty_print(os, indent)
 
 }//namespace PL0
 

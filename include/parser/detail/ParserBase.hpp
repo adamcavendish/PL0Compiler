@@ -40,7 +40,7 @@ PL0_PUBLIC:
 	 * @brief pretty_print function will print the abstruct-syntax-tree in a human-readable way.
 	 */
 	virtual void
-	pretty_print(std::ostream & os, std::size_t ident) const = 0;
+	pretty_print(std::ostream & os, std::size_t indent) const = 0;
 
 	/**
 	 * @brief generate function will generate the intermediate code representation

@@ -33,7 +33,7 @@ PL0_PUBLIC: //member functions
 	parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) override;
 
 	void
-	pretty_print(std::ostream & os, std::size_t ident) const override;
+	pretty_print(std::ostream & os, std::size_t indent) const override;
 
 PL0_PRIVATE: //member variables
 	int m_value;

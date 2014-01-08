@@ -33,12 +33,12 @@ Parser::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 }//parse(os, toker)
 
 void
-Parser::pretty_print(std::ostream & os, std::size_t ident) const {
-	os << std::string(ident, '\t') << "Translation Unit" << std::endl;
+Parser::pretty_print(std::ostream & os, std::size_t indent) const {
+	os << std::string(indent, '\t') << "Translation Unit" << std::endl;
 
 	if(m_genesis)
-		m_genesis->pretty_print(os, ident + 1);
-}//pretty_print(os, ident)
+		m_genesis->pretty_print(os, indent + 1);
+}//pretty_print(os, indent)
 
 }//namespace PL0
 

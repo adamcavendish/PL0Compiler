@@ -27,23 +27,25 @@ ProgramUnit::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 		flag = false;
 	m_node = std::move(block);
 
-	if(flag == true && toker->token() == Token::tk_period) {
-		toker->next(); // eat '.' token
-	} else {
-		parse_error(toker, "A program needs to be ended with a '.'");
-		flag = false;
-	}//if-else
+	if(flag == true) {
+		if(toker->token() == Token::tk_period) {
+			toker->next(); // eat '.' token
+		} else {
+			parse_error(os, toker, "A program needs to be ended with a '.'");
+			flag = false;
+		}//if-else
+	}//if
 
 	return flag;
 }//parse(os, toker)
 
 void
-ProgramUnit::pretty_print(std::ostream & os, std::size_t ident) const {
-	os << std::string(ident, '\t') << "ProgramUnit " << this->position_str() << std::endl;
+ProgramUnit::pretty_print(std::ostream & os, std::size_t indent) const {
+	os << std::string(indent, '\t') << "ProgramUnit " << this->position_str() << std::endl;
 
 	if(m_node)
-		m_node->pretty_print(os, ident+1);
-}//pretty_print(os, ident)
+		m_node->pretty_print(os, indent+1);
+}//pretty_print(os, indent)
 
 }//namespace PL0
 

@@ -45,27 +45,28 @@ PrimaryExpression::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 		m_node = std::move(expr);
 
 		if(toker->token() != Token::tk_rparenthesis) {
-			parse_error(toker, "Expect a ')' here.");
+			parse_error(os, toker, "Expect a ')' here.");
 		} else {
 			toker->next(); // eat the current ')'
 		}//if-else
 	} else {
 		flag = false;
-		parse_error(toker, "Expect either an identifier, or a number, or a parenthesized expression here.");
+		parse_error(os, toker,
+				"Expect either an identifier, or a number, or a parenthesized expression here.");
 	}//if-else
 
 	return flag;
 }//parse(os, toker)
 
 void
-PrimaryExpression::pretty_print(std::ostream & os, std::size_t ident) const {
+PrimaryExpression::pretty_print(std::ostream & os, std::size_t indent) const {
 #ifndef NDEBUG
-	os << std::string(ident, '\t') << "PrimaryExpression(debug) " << this->position_str() << std::endl;
+	os << std::string(indent, '\t') << "PrimaryExpression(debug) " << this->position_str() << std::endl;
 #endif//NDEBUG
 
 	if(m_node)
-		m_node->pretty_print(os, ident);
-}//pretty_print(os, ident)
+		m_node->pretty_print(os, indent);
+}//pretty_print(os, indent)
 
 }//namespace PL0
 

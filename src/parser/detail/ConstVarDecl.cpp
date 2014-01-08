@@ -22,7 +22,7 @@ ConstVarDecl::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 	toker->next(); // eat the current identifier
 
 	if(toker->token() != Token::tk_equal) {
-		parse_error(toker, "expect an '=' here for const identifier initialization");
+		parse_error(os, toker, "expect an '=' here for const identifier initialization");
 		flag = false;
 	} else {
 		toker->next(); // eat the current '='
@@ -35,7 +35,7 @@ ConstVarDecl::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 			flag = false;
 		m_node = std::move(int_num);
 	} else {
-		parse_error(toker, "A const declearation must be initialized with a integer number.");
+		parse_error(os, toker, "A const declearation must be initialized with a integer number.");
 		flag = false;
 	}//if-else
 
@@ -43,13 +43,13 @@ ConstVarDecl::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 }//parse(os, toker)
 
 void
-ConstVarDecl::pretty_print(std::ostream & os, std::size_t ident) const {
-	os << std::string(ident, '\t') << "ConstVarDecl "
+ConstVarDecl::pretty_print(std::ostream & os, std::size_t indent) const {
+	os << std::string(indent, '\t') << "ConstVarDecl "
 		<< this->position_str() << " '" << m_ident << "'" << std::endl;
 
 	if(m_node)
-		m_node->pretty_print(os, ident+1);
-}//pretty_print(os, ident)
+		m_node->pretty_print(os, indent+1);
+}//pretty_print(os, indent)
 
 }//namespace PL0
 

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <memory>
 #include <utility>
+#include <vector>
 // auc
 #include <auc/all.hpp>
 // PL0Compiler
@@ -23,7 +24,8 @@ PL0_PUBLIC:
 	BlockUnit(BlockUnit && rhs) :
 		m_const_decl_stmt(std::move(rhs.m_const_decl_stmt)),
 		m_var_decl_stmt(std::move(rhs.m_var_decl_stmt)),
-		m_expr(std::move(rhs.m_expr))
+		m_procedures(std::move(rhs.m_procedures)),
+		m_statement(std::move(rhs.m_statement))
 	{}
 	~BlockUnit() {}
 
@@ -34,7 +36,8 @@ PL0_PUBLIC:
 
 		m_const_decl_stmt = std::move(rhs.m_const_decl_stmt);
 		m_var_decl_stmt = std::move(rhs.m_var_decl_stmt);
-		m_expr = std::move(rhs.m_expr);
+		m_procedures = std::move(rhs.m_procedures);
+		m_statement = std::move(rhs.m_statement);
 		return (*this);
 	}//move assignment
 
@@ -42,14 +45,13 @@ PL0_PUBLIC:
 	parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) override;
 
 	void
-	pretty_print(std::ostream & os, std::size_t ident) const override;
+	pretty_print(std::ostream & os, std::size_t indent) const override;
 
 PL0_PRIVATE:
 	std::unique_ptr<ParserBase> m_const_decl_stmt;
 	std::unique_ptr<ParserBase> m_var_decl_stmt;
-
-	// @TODO grammar not complete
-	std::unique_ptr<ParserBase> m_expr;
+	std::vector<std::unique_ptr<ParserBase> > m_procedures;
+	std::unique_ptr<ParserBase> m_statement;
 };//class BlockUnit
 
 }//namespace PL0

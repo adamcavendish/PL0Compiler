@@ -15,6 +15,8 @@ bool Tokenizer::next() {
 	char ch = m_pfb->get();
 	while(ch == '\n') {
 		m_pfb->bump();
+
+		m_pfb->eat_space();
 		ch = m_pfb->get();
 	}//while
 	m_position = std::make_pair(m_pfb->line(), m_pfb->position());
@@ -102,8 +104,11 @@ void Tokenizer::extractTokenOperator() {
 		m_pfb->bump();
 
 		ch = m_pfb->get();
-		m_pfb->bump();
-		m_cur_tokword += ch;
+		if(ch == '=') {
+			// only '=' makes '<' or '>' a two-char-operator
+			m_pfb->bump();
+			m_cur_tokword += ch;
+		}//if
 	} else {
 		while(m_pwordmap->is_operator(ch)) {
 			m_cur_tokword += ch;
@@ -128,8 +133,10 @@ void Tokenizer::extractTokenOther() {
 		m_pfb->bump();
 
 		ch = m_pfb->get();
-		m_pfb->bump();
-		m_cur_tokword += ch;
+		if(ch == '=') {
+			m_pfb->bump();
+			m_cur_tokword += ch;
+		}//if
 	} else {
 		// normal othersym
 		m_cur_tokword += ch;

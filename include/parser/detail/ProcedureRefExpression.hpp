@@ -15,18 +15,18 @@ namespace PL0
 
 class Tokenizer;
 
-class IdentRefExpression : public ParserBase
+class ProcedureRefExpression : public ParserBase
 {
 PL0_PUBLIC: // functions
-	IdentRefExpression() {}
-	IdentRefExpression(const IdentRefExpression & rhs) = delete;
-	IdentRefExpression(IdentRefExpression && rhs) :
+	ProcedureRefExpression() {}
+	ProcedureRefExpression(const ProcedureRefExpression & rhs) = delete;
+	ProcedureRefExpression(ProcedureRefExpression && rhs) :
 		m_ident(std::move(rhs.m_ident))
 	{}
-	~IdentRefExpression() {}
+	~ProcedureRefExpression() {}
 
-	IdentRefExpression & operator=(const IdentRefExpression & rhs) = delete;
-	IdentRefExpression & operator=(IdentRefExpression && rhs) {
+	ProcedureRefExpression & operator=(const ProcedureRefExpression & rhs) = delete;
+	ProcedureRefExpression & operator=(ProcedureRefExpression && rhs) {
 		if(this == &rhs)
 			return (*this);
 
@@ -42,7 +42,7 @@ PL0_PUBLIC: // functions
 
 PL0_PRIVATE: // variables
 	std::string m_ident;
-};//class IdentRefExpression
+};//class ProcedureRefExpression
 
 }//namespace PL0
 

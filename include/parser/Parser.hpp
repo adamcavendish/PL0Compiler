@@ -39,7 +39,7 @@ PL0_PUBLIC:
 	parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) override;
 
 	void
-	pretty_print(std::ostream & os, std::size_t ident) const override;
+	pretty_print(std::ostream & os, std::size_t indent) const override;
 
 PL0_PRIVATE:
 	std::unique_ptr<ParserBase> m_genesis;

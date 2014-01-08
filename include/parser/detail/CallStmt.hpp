@@ -13,23 +13,21 @@ namespace PL0
 
 class Tokenizer;
 
-class UnaryExpression : public ParserBase
+class CallStmt : public ParserBase
 {
 PL0_PUBLIC:
-	UnaryExpression() {}
-	UnaryExpression(const UnaryExpression & rhs) = delete;
-	UnaryExpression(UnaryExpression && rhs) :
-		m_unary_op(rhs.m_unary_op),
+	CallStmt() {}
+	CallStmt(const CallStmt & rhs) = delete;
+	CallStmt(CallStmt && rhs) :
 		m_node(std::move(rhs.m_node))
 	{}
-	~UnaryExpression() {}
+	~CallStmt() {}
 
-	UnaryExpression & operator=(const UnaryExpression & rhs) = delete;
-	UnaryExpression & operator=(UnaryExpression && rhs) {
+	CallStmt & operator=(const CallStmt & rhs) = delete;
+	CallStmt & operator=(CallStmt && rhs) {
 		if(this == &rhs)
 			return (*this);
 
-		m_unary_op = rhs.m_unary_op;
 		m_node = std::move(rhs.m_node);
 		return (*this);
 	}//move assignment
@@ -41,9 +39,8 @@ PL0_PUBLIC:
 	pretty_print(std::ostream & os, std::size_t indent) const override;
 
 PL0_PRIVATE:
-	char m_unary_op;
 	std::unique_ptr<ParserBase> m_node;
-};//class UnaryExpression
+};//class CallStmt
 
 }//namespace PL0
 

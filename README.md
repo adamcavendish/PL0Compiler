@@ -49,7 +49,9 @@ Parser structure:
 	ProgramUnit
 		::= BlockUnit "."
 	BlockUnit
-		::= [ConstDeclStmt] [VarDeclStmt] { ProcedureDecl BlockUnit ";" } Statement
+		::= [ConstDeclStmt] [VarDeclStmt] { ProcedureUnit } Statement
+	ProcedureUnit
+		::= ProcedureDecl BlockUnit ";"
 	ConstDeclStmt
 		::= "const" ConstVarDecl { "," ConstVarDecl } ";"
 	VarDeclStmt
@@ -63,15 +65,17 @@ Parser structure:
 	ProcedureDecl
 		::= "procedure" ident ";"
 	Statement
-		::= AssignStmt
-		| CallStmt
+		::= CallStmt
 		| CompoundStmt
 		| IfStmt
 		| WhileStmt
+		| AssignStmt
 	AssignStmt
 		::= ident ":=" Expression
 	CallStmt
-		::=	"call" ident
+		::=	"call" ProcedureRefExpression
+	ProcedureRefExpression
+		::= ident
 	CompoundStmt
 		::= "begin" Statement { ";" Statement } "end"
 	IfStmt

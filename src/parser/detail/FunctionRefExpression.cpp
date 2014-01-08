@@ -1,4 +1,4 @@
-#include <parser/detail/IdentRefExpression.hpp>
+#include <parser/detail/FunctionRefExpression.hpp>
 // STL
 #include <iostream>
 #include <memory>
@@ -16,17 +16,17 @@ namespace PL0
 {
 
 bool
-IdentRefExpression::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
+FunctionRefExpression::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 	m_position = toker->position();
 
 	m_ident = toker->word();
-	toker->next(); // eat the identifer token
+	toker->next(); // eat current function identifier
 	return true;
 }//parse(os, toker)
 
 void
-IdentRefExpression::pretty_print(std::ostream & os, std::size_t indent) const {
-	os << std::string(indent, '\t') << "IdentRefExpression "
+FunctionRefExpression::pretty_print(std::ostream & os, std::size_t indent) const {
+	os << std::string(indent, '\t') << "FunctionRefExpression "
 		<< this->position_str() << " '" << m_ident << "'" << std::endl;
 }//pretty_print(os, indent)
 

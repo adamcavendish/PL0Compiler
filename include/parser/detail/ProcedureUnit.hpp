@@ -15,22 +15,24 @@ namespace PL0
 
 class Tokenizer;
 
-class IdentRefExpression : public ParserBase
+class ProcedureUnit : public ParserBase
 {
 PL0_PUBLIC: // functions
-	IdentRefExpression() {}
-	IdentRefExpression(const IdentRefExpression & rhs) = delete;
-	IdentRefExpression(IdentRefExpression && rhs) :
-		m_ident(std::move(rhs.m_ident))
+	ProcedureUnit() {}
+	ProcedureUnit(const ProcedureUnit & rhs) = delete;
+	ProcedureUnit(ProcedureUnit && rhs) :
+		m_proc_node(std::move(rhs.m_proc_node)),
+		m_block(std::move(rhs.m_block))
 	{}
-	~IdentRefExpression() {}
+	~ProcedureUnit() {}
 
-	IdentRefExpression & operator=(const IdentRefExpression & rhs) = delete;
-	IdentRefExpression & operator=(IdentRefExpression && rhs) {
+	ProcedureUnit & operator=(const ProcedureUnit & rhs) = delete;
+	ProcedureUnit & operator=(ProcedureUnit && rhs) {
 		if(this == &rhs)
 			return (*this);
 
-		m_ident = std::move(rhs.m_ident);
+		m_proc_node = std::move(rhs.m_proc_node);
+		m_block = std::move(rhs.m_block);
 		return (*this);
 	}//move assignment
 
@@ -41,8 +43,9 @@ PL0_PUBLIC: // functions
 	pretty_print(std::ostream & os, std::size_t indent) const override;
 
 PL0_PRIVATE: // variables
-	std::string m_ident;
-};//class IdentRefExpression
+	std::unique_ptr<ParserBase> m_proc_node;
+	std::unique_ptr<ParserBase> m_block;
+};//class ProcedureUnit
 
 }//namespace PL0
 

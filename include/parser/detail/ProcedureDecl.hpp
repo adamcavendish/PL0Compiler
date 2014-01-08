@@ -1,9 +1,7 @@
 #pragma once
 // STL
-#include <iostream>
 #include <memory>
 #include <utility>
-#include <vector>
 // auc
 #include <auc/all.hpp>
 // PL0Compiler
@@ -15,22 +13,22 @@ namespace PL0
 
 class Tokenizer;
 
-class ConstDeclStmt : public ParserBase
+class ProcedureDecl : public ParserBase
 {
 PL0_PUBLIC:
-	ConstDeclStmt() {}
-	ConstDeclStmt(const ConstDeclStmt & rhs) = delete;
-	ConstDeclStmt(ConstDeclStmt && rhs) :
-		m_node_vec(std::move(rhs.m_node_vec))
+	ProcedureDecl() {}
+	ProcedureDecl(const ProcedureDecl & rhs) = delete;
+	ProcedureDecl(ProcedureDecl && rhs) :
+		m_ident(std::move(rhs.m_ident))
 	{}
-	~ConstDeclStmt() {}
+	~ProcedureDecl() {}
 
-	ConstDeclStmt & operator=(const ConstDeclStmt & rhs) = delete;
-	ConstDeclStmt & operator=(ConstDeclStmt && rhs) {
+	ProcedureDecl & operator=(const ProcedureDecl & rhs) = delete;
+	ProcedureDecl & operator=(ProcedureDecl && rhs) {
 		if(this == &rhs)
 			return (*this);
 
-		m_node_vec = std::move(rhs.m_node_vec);
+		m_ident = std::move(rhs.m_ident);
 		return (*this);
 	}//move assignment
 
@@ -41,8 +39,8 @@ PL0_PUBLIC:
 	pretty_print(std::ostream & os, std::size_t indent) const override;
 
 PL0_PRIVATE:
-	std::vector<std::unique_ptr<ParserBase> > m_node_vec;
-};//class ConstDeclStmt
+	std::string m_ident;
+};//class ProcedureDecl
 
 }//namespace PL0
 

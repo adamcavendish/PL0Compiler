@@ -15,22 +15,22 @@ namespace PL0
 
 class Tokenizer;
 
-class ConstDeclStmt : public ParserBase
+class CompoundStmt : public ParserBase
 {
-PL0_PUBLIC:
-	ConstDeclStmt() {}
-	ConstDeclStmt(const ConstDeclStmt & rhs) = delete;
-	ConstDeclStmt(ConstDeclStmt && rhs) :
-		m_node_vec(std::move(rhs.m_node_vec))
+PL0_PUBLIC: // functions
+	CompoundStmt() {}
+	CompoundStmt(const CompoundStmt & rhs) = delete;
+	CompoundStmt(CompoundStmt && rhs) :
+		m_nodes(std::move(rhs.m_nodes))
 	{}
-	~ConstDeclStmt() {}
+	~CompoundStmt() {}
 
-	ConstDeclStmt & operator=(const ConstDeclStmt & rhs) = delete;
-	ConstDeclStmt & operator=(ConstDeclStmt && rhs) {
+	CompoundStmt & operator=(const CompoundStmt & rhs) = delete;
+	CompoundStmt & operator=(CompoundStmt && rhs) {
 		if(this == &rhs)
 			return (*this);
 
-		m_node_vec = std::move(rhs.m_node_vec);
+		m_nodes = std::move(rhs.m_nodes);
 		return (*this);
 	}//move assignment
 
@@ -40,9 +40,9 @@ PL0_PUBLIC:
 	void
 	pretty_print(std::ostream & os, std::size_t indent) const override;
 
-PL0_PRIVATE:
-	std::vector<std::unique_ptr<ParserBase> > m_node_vec;
-};//class ConstDeclStmt
+PL0_PRIVATE: // variables
+	std::vector<std::unique_ptr<ParserBase> > m_nodes;
+};//class CompoundStmt
 
 }//namespace PL0
 

@@ -46,7 +46,7 @@ ConstDeclStmt::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 	if(flag == true && toker->token() == Token::tk_semicolon) {
 		toker->next(); // eat ';' token
 	} else {
-		parse_error(toker, "A const declaration statement must end in a ';'");
+		parse_error(os, toker, "A const declaration statement must end in a ';'");
 		flag = false;
 	}//if-else
 	
@@ -54,14 +54,14 @@ ConstDeclStmt::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 }//parse(os, toker)
 
 void
-ConstDeclStmt::pretty_print(std::ostream & os, std::size_t ident) const {
-	os << std::string(ident, '\t') << "ConstDeclStmt " << this->position_str() << std::endl;
+ConstDeclStmt::pretty_print(std::ostream & os, std::size_t indent) const {
+	os << std::string(indent, '\t') << "ConstDeclStmt " << this->position_str() << std::endl;
 
 	for(const auto & i : m_node_vec) {
 		if(i)
-			i->pretty_print(os, ident+1);
+			i->pretty_print(os, indent+1);
 	}//for
-}//pretty_print(os, ident)
+}//pretty_print(os, indent)
 
 }//namespace PL0
 

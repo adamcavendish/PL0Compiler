@@ -15,6 +15,8 @@
 #include <parser/detail/ConstDeclStmt.hpp>
 #include <parser/detail/VarDeclStmt.hpp>
 #include <parser/detail/Expression.hpp>
+#include <parser/detail/ProcedureUnit.hpp>
+#include <parser/detail/Statement.hpp>
 
 namespace PL0 {
 
@@ -37,27 +39,36 @@ BlockUnit::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 		m_var_decl_stmt = std::move(vdecl);
 	}//if-else
 
-	// @TODO grammar is not complete
-	auto expr = auc::make_unique<Expression>();
-	if(!expr->parse(os, toker))
-		flag = false;
-	m_expr = std::move(expr);
+	while(flag == true && toker->token() == Token::tk_procedure) {
+		auto proc_unit = auc::make_unique<ProcedureUnit>();
+		if(!proc_unit->parse(os, toker))
+			flag = false;
+		m_procedures.push_back(std::move(proc_unit));
+	}//while
+
+	if(flag == true) {
+		auto stmt = auc::make_unique<Statement>();
+		if(!stmt->parse(os, toker))
+			flag = false;
+		m_statement = std::move(stmt);
+	}//if
 	
 	return flag;
 }//parse(os, toker)
 
 void
-BlockUnit::pretty_print(std::ostream & os, std::size_t ident) const {
-	os << std::string(ident, '\t') << "BlockUnit " << this->position_str() << std::endl;
+BlockUnit::pretty_print(std::ostream & os, std::size_t indent) const {
+	os << std::string(indent, '\t') << "BlockUnit " << this->position_str() << std::endl;
 	
 	if(m_const_decl_stmt)
-		m_const_decl_stmt->pretty_print(os, ident+1);
+		m_const_decl_stmt->pretty_print(os, indent+1);
 	if(m_var_decl_stmt)
-		m_var_decl_stmt->pretty_print(os, ident+1);
-
-	if(m_expr)
-		m_expr->pretty_print(os, ident+1);
-}//pretty_print(os, ident)
+		m_var_decl_stmt->pretty_print(os, indent+1);
+	for(const auto & i : m_procedures)
+		i->pretty_print(os, indent+1);
+	if(m_statement)
+		m_statement->pretty_print(os, indent+1);
+}//pretty_print(os, indent)
 
 }//namespace PL0
 

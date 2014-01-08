@@ -38,7 +38,7 @@ PL0_PUBLIC: // functions
 	parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) override;
 
 	void
-	pretty_print(std::ostream & os, std::size_t ident) const override;
+	pretty_print(std::ostream & os, std::size_t indent) const override;
 
 PL0_PRIVATE: // variables
 	std::unique_ptr<ParserBase> m_node;

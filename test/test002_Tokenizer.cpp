@@ -74,6 +74,54 @@ TEST(TokenizerTest, chk_next) {
 	ASSERT_EQ(expected, comp);
 }
 
+TEST(TokenizerTest, file01) {
+	auto pwm = std::make_shared<WordMap>();
+	auto pfb = std::make_shared<FileBuf>("file01.pl0");
+	
+	std::string comp;
+	Tokenizer toker(pfb, pwm);
+	while(toker.next()) {
+		if(toker.token() == Token::tk_error)
+			FAIL();
+		comp += std::to_string(toker.token());
+		comp += ": `";
+		comp += toker.word();
+		comp += "': <";
+		comp += std::to_string(toker.position().first);
+		comp += ", ";
+		comp += std::to_string(toker.position().second);
+		comp += ">";
+		comp += "\n";
+	}//while
+	
+	std::cout << comp << std::endl;
+	SUCCEED();
+}
+
+TEST(TokenizerTest, file02) {
+	auto pwm = std::make_shared<WordMap>();
+	auto pfb = std::make_shared<FileBuf>("file02.pl0");
+	
+	std::string comp;
+	Tokenizer toker(pfb, pwm);
+	while(toker.next()) {
+		if(toker.token() == Token::tk_error)
+			FAIL();
+		comp += std::to_string(toker.token());
+		comp += ": `";
+		comp += toker.word();
+		comp += "': <";
+		comp += std::to_string(toker.position().first);
+		comp += ", ";
+		comp += std::to_string(toker.position().second);
+		comp += ">";
+		comp += "\n";
+	}//while
+	
+	std::cout << comp << std::endl;
+	SUCCEED();
+}
+
 int main(int argc, char * argv[])
 {
 	testing::InitGoogleTest(&argc, argv);
@@ -117,6 +165,92 @@ int main(int argc, char * argv[])
 		"write(c);\n"
 		"end.\n"
 		"\n";
+	ofs << code;
+	ofs.close();
+
+	ofs.open("file01.pl0");
+	code =
+		"var x, squ;\n"
+		"\n"
+		"procedure square;\n"
+		"begin\n"
+		"	squ:= x * x\n"
+		"end;\n"
+		"\n"
+		"begin\n"
+		"	x := 1;\n"
+		"	while x <= 10 do\n"
+		"	begin\n"
+		"		call square;\n"
+		"		x := x + 1\n"
+		"	end\n"
+		"end.\n";
+	ofs << code;
+	ofs.close();
+
+	ofs.open("file02.pl0");
+	code =
+		"const\n"
+		"  m =  7,\n"
+		"  n = 85;\n"
+		" \n"
+		"var\n"
+		"  x, y, z, q, r;\n"
+		" \n"
+		"procedure multiply;\n"
+		"var a, b;\n"
+		" \n"
+		"begin\n"
+		"  a := x;\n"
+		"  b := y;\n"
+		"  z := 0;\n"
+		"  while b > 0 do begin\n"
+		"    if odd b then z := z + a;\n"
+		"    a := 2 * a;\n"
+		"    b := b / 2\n"
+		"  end\n"
+		"end;\n"
+		" \n"
+		"procedure divide;\n"
+		"var w;\n"
+		"begin\n"
+		"  r := x;\n"
+		"  q := 0;\n"
+		"  w := y;\n"
+		"  while w <= r do w := 2 * w;\n"
+		"  while w > y do begin\n"
+		"    q := 2 * q;\n"
+		"    w := w / 2;\n"
+		"    if w <= r then begin\n"
+		"      r := r - w;\n"
+		"      q := q + 1\n"
+		"    end\n"
+		"  end\n"
+		"end;\n"
+		" \n"
+		"procedure gcd;\n"
+		"var f, g;\n"
+		"begin\n"
+		"  f := x;\n"
+		"  g := y;\n"
+		"  while f # g do begin\n"
+		"    if f < g then g := g - f;\n"
+		"    if g < f then f := f - g\n"
+		"  end;\n"
+		"  z := f\n"
+		"end;\n"
+		" \n"
+		"begin\n"
+		"  x := m;\n"
+		"  y := n;\n"
+		"  call multiply;\n"
+		"  x := 25;\n"
+		"  y :=  3;\n"
+		"  call divide;\n"
+		"  x := 84;\n"
+		"  y := 36;\n"
+		"  call gcd\n"
+		"end.\n";
 	ofs << code;
 	ofs.close();
 

@@ -26,10 +26,10 @@ VarDecl::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 }//parse(os, toker)
 
 void
-VarDecl::pretty_print(std::ostream & os, std::size_t ident) const {
-	os << std::string(ident, '\t') << "VarDecl "
+VarDecl::pretty_print(std::ostream & os, std::size_t indent) const {
+	os << std::string(indent, '\t') << "VarDecl "
 		<< this->position_str() << " '" << m_ident << "'" << std::endl;
-}//pretty_print(os, ident)
+}//pretty_print(os, indent)
 
 }//namespace PL0
 
