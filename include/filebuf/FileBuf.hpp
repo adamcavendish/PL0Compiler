@@ -28,6 +28,9 @@ PL0_PUBLIC: //functions
 	FileBuf & operator=(const FileBuf & rhs) = delete;
 	FileBuf & operator=(FileBuf && rhs) = delete;
 
+	inline bool
+	ok() const;
+
 	/**
 	 * @brief returns the character at the current position
 	 */
@@ -45,16 +48,6 @@ PL0_PUBLIC: //functions
 	 */
 	char
 	next();
-
-	/**
-	 * @brief decrease the current position. Only one time unget is guaranteed.
-	 *
-	 * @return on success, return true; on failure, return false
-	 *
-	 * FIXME: this function will cause error at the edge of a newline under windows and mac
-	 */
-	inline bool
-	unget();
 
 	/**
 	 * @brief get current line number
@@ -98,6 +91,10 @@ PL0_PRIVATE: //members
 	std::size_t m_pos_num;
 };//class FileBuf
 
+bool
+FileBuf::ok() const
+{ return m_file; }
+
 std::size_t
 FileBuf::eat_space() {
 	using namespace std;
@@ -110,14 +107,6 @@ FileBuf::eat_space() {
 
 	return ret;
 }//eat_spaces()
-
-bool
-FileBuf::unget() {
-	bool ret = m_pbuf->sungetc() != std::char_traits<char>::eof();
-	if(ret)
-		--m_pos_num;
-	return ret;
-}//unget()
 
 bool
 FileBuf::check_at_newline(const char cur_char) const {
@@ -133,5 +122,4 @@ FileBuf::check_at_newline(const char cur_char) const {
 }//check_at_newline()
 
 }//namespace PL0
-
 

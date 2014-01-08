@@ -1,8 +1,8 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 SET(CMAKE_CXX_COMPILER g++-4.8)
-SET(CMAKE_CXX_FLAGS_RELEASE "-std=c++11 -Wall -march=native -flto -O3 ${CMAKE_CXX_FLAGS_RELEASE}")
-SET(CMAKE_CXX_FLAGS_DEBUG "-DNDEBUG -std=c++11 -g3 -gdwarf-2 -Wall -march=native ${CMAKE_CXX_FLAGS_DEBUG}")
+SET(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -std=c++11 -Wall -march=native -flto -O3 ${CMAKE_CXX_FLAGS_RELEASE}")
+SET(CMAKE_CXX_FLAGS_DEBUG "-std=c++11 -g3 -gdwarf-2 -Wall -march=native ${CMAKE_CXX_FLAGS_DEBUG}")
 
 # --------------------------------------------------
 # Add gtest
@@ -43,12 +43,46 @@ FILE(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/homework/")
 PROJECT(PL0Compiler)
 MESSAGE(STATUS "Project: " ${PROJECT_NAME})
 
-SET(__TARGET_NAME__ homework/hw01)
+SET(__TARGET_NAME__ homework/hw001)
 SET(__SRC__
 	homework/hw001.cpp
 	src/filebuf/FileBuf.cpp
 	src/tokenizer/Tokenizer.cpp
 	src/tokenizer/WordMap.cpp
+)
+ADD_EXECUTABLE(${__TARGET_NAME__} ${__SRC__})
+
+SET(__TARGET_NAME__ homework/hw002)
+SET(__SRC__
+	homework/hw002.cpp
+	src/filebuf/FileBuf.cpp
+	src/tokenizer/Tokenizer.cpp
+	src/tokenizer/WordMap.cpp
+	src/parser/HelperFunctions.cpp
+	src/parser/Parser.cpp
+	src/parser/detail/AssignStmt.cpp
+	src/parser/detail/BlockUnit.cpp
+	src/parser/detail/CallStmt.cpp
+	src/parser/detail/CompoundStmt.cpp
+	src/parser/detail/CondStmt.cpp
+	src/parser/detail/ConstDeclStmt.cpp
+	src/parser/detail/ConstVarDecl.cpp
+	src/parser/detail/Expression.cpp
+	src/parser/detail/FunctionRefExpression.cpp
+	src/parser/detail/IdentRefExpression.cpp
+	src/parser/detail/IfStmt.cpp
+	src/parser/detail/IntegerLiteral.cpp
+	src/parser/detail/MultiplicativeExpression.cpp
+	src/parser/detail/PrimaryExpression.cpp
+	src/parser/detail/ProcedureDecl.cpp
+	src/parser/detail/ProcedureRefExpression.cpp
+	src/parser/detail/ProcedureUnit.cpp
+	src/parser/detail/ProgramUnit.cpp
+	src/parser/detail/Statement.cpp
+	src/parser/detail/UnaryExpression.cpp
+	src/parser/detail/VarDecl.cpp
+	src/parser/detail/VarDeclStmt.cpp
+	src/parser/detail/WhileStmt.cpp
 )
 ADD_EXECUTABLE(${__TARGET_NAME__} ${__SRC__})
 

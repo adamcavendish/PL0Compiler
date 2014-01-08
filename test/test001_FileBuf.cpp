@@ -170,15 +170,6 @@ TEST(FileBufTest, chk_lin_next) {
 	ASSERT_EQ(expect, code);
 }
 
-TEST(FileBufTest, chk_unget) {
-	FileBuf fb("win.pl0");
-
-	char ch = fb.bump();
-	fb.unget();
-
-	ASSERT_EQ(ch, fb.get());
-}
-
 TEST(FileBufTest, chk_line_position) {
 	FileBuf fb("win.pl0");
 	char ch = fb.get();
