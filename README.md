@@ -11,9 +11,31 @@ I am implementing the compiler using standard c++11 with gcc-4.8
 Dependency:
 
 * [cmake](http://www.cmake.org/)
+* g++-4.8 or above
+
+How to get cmake on Ubuntu:
+
+	sudo apt-get install cmake
+
+How to get g++-4.8 on Ubuntu:
+
+	sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+	sudo apt-get update
+	sudo apt-get install g++-4.8 c++-4.8
 
 ----
+Build instructions:
 
+	mkdir build
+	cd build
+	cmake -DCMAKE_BUILD_TYPE=RELEASE ..
+	make -j
+
+Build mode:
+
+* DEBUG/RELEASE (use `-DCMAKE_BUILD_TYPE=DEBUG/RELEASE` to define)
+
+----
 ## Grammar
 
 The following is the syntax rules of the model language defined in EBNF:
