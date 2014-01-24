@@ -2,6 +2,8 @@ build/*
 useless
 
 .clang_complete
+.ycm_extra_conf.py
+.ycm_extra_conf.pyc
 
 # ### FOR OS generated ###
 .Trashes

@@ -1,7 +1,6 @@
 #pragma once
 
 // PL0Compiler
-#include <tokenizer/Tokenizer.hpp>
 #include <parser/HelperFunctions.hpp>
 #include <parser/Parser.hpp>
 #include <parser/detail/ParserBase.hpp>

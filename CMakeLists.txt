@@ -38,26 +38,15 @@ INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/include/")
 FILE(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/homework/")
 
 # --------------------------------------------------
-# PROJECT
+# Dependencies
 # --------------------------------------------------
-PROJECT(PL0Compiler)
-MESSAGE(STATUS "Project: " ${PROJECT_NAME})
-
-SET(__TARGET_NAME__ homework/hw001)
-SET(__SRC__
-	homework/hw001.cpp
+SET(__SRC_TOKENIZER__
 	src/filebuf/FileBuf.cpp
 	src/tokenizer/Tokenizer.cpp
 	src/tokenizer/WordMap.cpp
 )
-ADD_EXECUTABLE(${__TARGET_NAME__} ${__SRC__})
 
-SET(__TARGET_NAME__ homework/hw002)
-SET(__SRC__
-	homework/hw002.cpp
-	src/filebuf/FileBuf.cpp
-	src/tokenizer/Tokenizer.cpp
-	src/tokenizer/WordMap.cpp
+SET(__SRC_PARSER__
 	src/parser/HelperFunctions.cpp
 	src/parser/Parser.cpp
 	src/parser/detail/AssignStmt.cpp
@@ -83,6 +72,26 @@ SET(__SRC__
 	src/parser/detail/VarDecl.cpp
 	src/parser/detail/VarDeclStmt.cpp
 	src/parser/detail/WhileStmt.cpp
+)
+
+# --------------------------------------------------
+# PROJECT
+# --------------------------------------------------
+PROJECT(PL0Compiler)
+MESSAGE(STATUS "Project: " ${PROJECT_NAME})
+
+SET(__TARGET_NAME__ homework/hw001)
+SET(__SRC__
+	homework/hw001.cpp
+	${__SRC_TOKENIZER__}
+)
+ADD_EXECUTABLE(${__TARGET_NAME__} ${__SRC__})
+
+SET(__TARGET_NAME__ homework/hw002)
+SET(__SRC__
+	homework/hw002.cpp
+	${__SRC_TOKENIZER__}
+	${__SRC_PARSER__}
 )
 ADD_EXECUTABLE(${__TARGET_NAME__} ${__SRC__})
 
@@ -103,9 +112,7 @@ SET(__TEST_NAME__ test_Tokenizer)
 SET(__TARGET_NAME__ test002_Tokenizer)
 SET(__SRC__
 	test/test002_Tokenizer.cpp
-	src/filebuf/FileBuf.cpp
-	src/tokenizer/Tokenizer.cpp
-	src/tokenizer/WordMap.cpp
+	${__SRC_TOKENIZER__}
 )
 ADD_EXECUTABLE(${__TARGET_NAME__} ${__SRC__})
 TARGET_LINK_LIBRARIES(${__TARGET_NAME__} gtest gtest_main pthread)
@@ -115,34 +122,8 @@ SET(__TEST_NAME__ test_Parser)
 SET(__TARGET_NAME__ test003_Parser)
 SET(__SRC__
 	test/test003_Parser.cpp
-	src/filebuf/FileBuf.cpp
-	src/tokenizer/Tokenizer.cpp
-	src/tokenizer/WordMap.cpp
-	src/parser/HelperFunctions.cpp
-	src/parser/Parser.cpp
-	src/parser/detail/AssignStmt.cpp
-	src/parser/detail/BlockUnit.cpp
-	src/parser/detail/CallStmt.cpp
-	src/parser/detail/CompoundStmt.cpp
-	src/parser/detail/CondStmt.cpp
-	src/parser/detail/ConstDeclStmt.cpp
-	src/parser/detail/ConstVarDecl.cpp
-	src/parser/detail/Expression.cpp
-	src/parser/detail/FunctionRefExpression.cpp
-	src/parser/detail/IdentRefExpression.cpp
-	src/parser/detail/IfStmt.cpp
-	src/parser/detail/IntegerLiteral.cpp
-	src/parser/detail/MultiplicativeExpression.cpp
-	src/parser/detail/PrimaryExpression.cpp
-	src/parser/detail/ProcedureDecl.cpp
-	src/parser/detail/ProcedureRefExpression.cpp
-	src/parser/detail/ProcedureUnit.cpp
-	src/parser/detail/ProgramUnit.cpp
-	src/parser/detail/Statement.cpp
-	src/parser/detail/UnaryExpression.cpp
-	src/parser/detail/VarDecl.cpp
-	src/parser/detail/VarDeclStmt.cpp
-	src/parser/detail/WhileStmt.cpp
+	${__SRC_TOKENIZER__}
+	${__SRC_PARSER__}
 )
 ADD_EXECUTABLE(${__TARGET_NAME__} ${__SRC__})
 TARGET_LINK_LIBRARIES(${__TARGET_NAME__} gtest gtest_main pthread)

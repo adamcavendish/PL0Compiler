@@ -10,6 +10,7 @@
 #include <token.hpp>
 #include <preprocess.hpp>
 #include <tokenizer/Tokenizer.hpp>
+#include <context/Context.hpp>
 #include <parser/HelperFunctions.hpp>
 #include <parser/detail/ParserBase.hpp>
 #include <parser/detail/ProgramUnit.hpp>
@@ -18,19 +19,19 @@ namespace PL0
 {
 
 bool
-Parser::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
+Parser::parse(std::ostream & os, std::shared_ptr<Context> context) {
 	bool flag = true;
 
-	toker->next(); // start tokenizing
+	context->getTokenizer()->next(); // start tokenizing
 
 	auto prog = auc::make_unique<ProgramUnit>();
-	if(!prog->parse(os, toker))
+	if(!prog->parse(os, context))
 		flag = false;
 
 	m_genesis = std::move(prog);
 
 	return flag;
-}//parse(os, toker)
+}//parse(os, context)
 
 void
 Parser::pretty_print(std::ostream & os, std::size_t indent) const {

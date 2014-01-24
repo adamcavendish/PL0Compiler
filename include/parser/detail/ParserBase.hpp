@@ -6,10 +6,14 @@
 // PL0Compiler
 #include <preprocess.hpp>
 
+namespace llvm {
+	class Value;
+}//namespace llvm
+
 namespace PL0
 {
 
-class Tokenizer;
+class Context;
 
 /**
  * @brief the base object of all parsers
@@ -23,18 +27,18 @@ PL0_PUBLIC:
 	/**
 	 * @brief All parsers should be default constructable
 	 */
-	ParserBase() {}
+	ParserBase() = default;
 
 	/**
 	 * @brief All parsers should be moveable but non-copyable
 	 */
-	ParserBase(ParserBase && rhs) {}
+	ParserBase(ParserBase && rhs) = default;
 
 	/**
 	 * @brief parse function should do the corresponding parsing work
 	 */
 	virtual bool
-	parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) = 0;
+	parse(std::ostream & os, std::shared_ptr<Context> context) = 0;
 
 	/**
 	 * @brief pretty_print function will print the abstruct-syntax-tree in a human-readable way.
@@ -47,8 +51,14 @@ PL0_PUBLIC:
 	 */
 	/*
 	virtual void
-	generate(ostream & os) = 0;
+	generate(std::ostream & os) const = 0;
 	*/
+
+	/**
+	 * @brief generate intermediate code representation using llvm API
+	 */
+	virtual llvm::Value *
+	llvm_generate(std::shared_ptr<Context> context) const = 0;
 
 	/**
 	 * @brief virtual destructor of Base Parser

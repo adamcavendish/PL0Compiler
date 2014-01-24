@@ -3,16 +3,18 @@
 #include <iostream>
 #include <string>
 // PL0Compiler
+#include <context/Context.hpp>
 #include <tokenizer/Tokenizer.hpp>
 
 namespace PL0 {
 
 void
-parse_error(std::ostream & os, std::shared_ptr<Tokenizer> toker, const std::string & err_msg) {
-	os << "Error at " << toker->position().first << ":" << toker->position().second <<
+parse_error(std::ostream & os, std::shared_ptr<Context> context, const std::string & err_msg) {
+	os << "Error at " << context->getTokenizer()->position().first << ":" << context->getTokenizer()->position().second <<
 		" " << err_msg << std::endl;
-	os << "Current token: <" << toker->token() << ":'" << toker->word() << "'>" << std::endl;
-}//parse_error(toker, err_msg)
+	os << "Current token: <" << context->getTokenizer()->token()
+		<< ":'" << context->getTokenizer()->word() << "'>" << std::endl;
+}//parse_error(context, err_msg)
 
 }//namespace PL0
 
