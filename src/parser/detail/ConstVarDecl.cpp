@@ -6,6 +6,7 @@
 #include <token.hpp>
 #include <preprocess.hpp>
 #include <tokenizer/Tokenizer.hpp>
+#include <context/Context.hpp>
 #include <parser/detail/ParserBase.hpp>
 #include <parser/detail/IntegerLiteral.hpp>
 
@@ -13,7 +14,9 @@ namespace PL0
 {
 
 bool
-ConstVarDecl::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
+ConstVarDecl::parse(std::ostream & os, std::shared_ptr<Context> context) {
+	auto toker = context->getTokenizer();
+
 	m_position = toker->position();
 	bool flag = true;
 
@@ -22,7 +25,7 @@ ConstVarDecl::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 	toker->next(); // eat the current identifier
 
 	if(toker->token() != Token::tk_equal) {
-		parse_error(os, toker, "expect an '=' here for const identifier initialization");
+		parse_error(os, context, "expect an '=' here for const identifier initialization");
 		flag = false;
 	} else {
 		toker->next(); // eat the current '='
@@ -31,16 +34,16 @@ ConstVarDecl::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 	if(flag == true && toker->token() == Token::tk_number) {
 		// make_unique was overlooked by c++11, a simple implementation
 		auto int_num = auc::make_unique<IntegerLiteral>();
-		if(!int_num->parse(os, toker))
+		if(!int_num->parse(os, context))
 			flag = false;
 		m_node = std::move(int_num);
 	} else {
-		parse_error(os, toker, "A const declearation must be initialized with a integer number.");
+		parse_error(os, context, "A const declearation must be initialized with a integer number.");
 		flag = false;
 	}//if-else
 
 	return flag;
-}//parse(os, toker)
+}//parse(os, context)
 
 void
 ConstVarDecl::pretty_print(std::ostream & os, std::size_t indent) const {
@@ -50,6 +53,21 @@ ConstVarDecl::pretty_print(std::ostream & os, std::size_t indent) const {
 	if(m_node)
 		m_node->pretty_print(os, indent+1);
 }//pretty_print(os, indent)
+
+llvm::Value *
+ConstVarDecl::llvm_generate(std::shared_ptr<Context> context) const {
+	bool flag = true;
+
+	llvm::Value * int_gen = m_node->llvm_generate(context);
+	if(int_gen == nullptr) {
+		generate_error(std::cerr, context, "ConstVarDecl->IntegerLiteral llvm_generate error");
+		flag = false;
+	}//if
+
+	if(flag == true)
+		return int_gen;
+	return nullptr;
+}//llvm_generate(context)
 
 }//namespace PL0
 

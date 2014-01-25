@@ -12,6 +12,7 @@
 #include <token.hpp>
 #include <preprocess.hpp>
 #include <tokenizer/Tokenizer.hpp>
+#include <context/Context.hpp>
 #include <parser/HelperFunctions.hpp>
 #include <parser/detail/Expression.hpp>
 
@@ -19,7 +20,9 @@ namespace PL0
 {
 
 bool
-CondStmt::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
+CondStmt::parse(std::ostream & os, std::shared_ptr<Context> context) {
+	auto toker = context->getTokenizer();
+
 	m_position = toker->position();
 	bool flag = true;
 
@@ -28,12 +31,12 @@ CondStmt::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 		toker->next(); // eat current token 'odd'
 
 		auto expr = auc::make_unique<Expression>();
-		if(!expr->parse(os, toker))
+		if(!expr->parse(os, context))
 			flag = false;
 		m_expr_node1 = std::move(expr);
 	} else {
 		auto left_expr = auc::make_unique<Expression>();
-		if(!left_expr->parse(os, toker))
+		if(!left_expr->parse(os, context))
 			flag = false;
 		m_expr_node1 = std::move(left_expr);
 
@@ -45,7 +48,7 @@ CondStmt::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 				toker->token() != tk_greaterequal)
 		{
 			flag = false;
-			parse_error(os, toker, "Unexpected Comparison Operator Here.");
+			parse_error(os, context, "Unexpected Comparison Operator Here.");
 		} else {
 			m_condition_op = toker->token();
 			toker->next(); // eat the comparison operator
@@ -53,14 +56,14 @@ CondStmt::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 
 		if(flag == true) {
 			auto right_expr = auc::make_unique<Expression>();
-			if(!right_expr->parse(os, toker))
+			if(!right_expr->parse(os, context))
 				flag = false;
 			m_expr_node2 = std::move(right_expr);
 		}//if
 	}//if-else
 
 	return flag;
-}//parse(os, toker)
+}//parse(os, context)
 
 void
 CondStmt::pretty_print(std::ostream & os, std::size_t indent) const {
@@ -104,6 +107,12 @@ CondStmt::pretty_print(std::ostream & os, std::size_t indent) const {
 			m_expr_node2->pretty_print(os, indent+1);
 	}//if-else
 }//pretty_print(os, indent)
+
+llvm::Value *
+CondStmt::llvm_generate(std::shared_ptr<Context> context) const {
+	// @TODO
+	return (llvm::Value *)(1);
+}//llvm_generate(context)
 
 }//namespace PL0
 

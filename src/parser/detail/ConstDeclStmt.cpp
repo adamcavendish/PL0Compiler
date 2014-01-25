@@ -10,6 +10,7 @@
 #include <token.hpp>
 #include <preprocess.hpp>
 #include <tokenizer/Tokenizer.hpp>
+#include <context/Context.hpp>
 #include <parser/HelperFunctions.hpp>
 #include <parser/detail/ParserBase.hpp>
 #include <parser/detail/ConstVarDecl.hpp>
@@ -17,10 +18,12 @@
 namespace PL0
 {
 
-class Tokenizer;
+class Context;
 
 bool
-ConstDeclStmt::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
+ConstDeclStmt::parse(std::ostream & os, std::shared_ptr<Context> context) {
+	auto toker = context->getTokenizer();
+
 	m_position = toker->position();
 	bool flag = true;
 
@@ -28,7 +31,7 @@ ConstDeclStmt::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 
 	while(true) {
 		auto cvar = auc::make_unique<ConstVarDecl>();
-		if(!cvar->parse(os, toker)) {
+		if(!cvar->parse(os, context)) {
 			flag = false;
 			m_node_vec.push_back(std::move(cvar));
 			break;
@@ -46,12 +49,12 @@ ConstDeclStmt::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 	if(flag == true && toker->token() == Token::tk_semicolon) {
 		toker->next(); // eat ';' token
 	} else {
-		parse_error(os, toker, "A const declaration statement must end in a ';'");
+		parse_error(os, context, "A const declaration statement must end in a ';'");
 		flag = false;
 	}//if-else
 	
 	return flag;
-}//parse(os, toker)
+}//parse(os, context)
 
 void
 ConstDeclStmt::pretty_print(std::ostream & os, std::size_t indent) const {
@@ -62,6 +65,21 @@ ConstDeclStmt::pretty_print(std::ostream & os, std::size_t indent) const {
 			i->pretty_print(os, indent+1);
 	}//for
 }//pretty_print(os, indent)
+
+llvm::Value *
+ConstDeclStmt::llvm_generate(std::shared_ptr<Context> context) const {
+	llvm::Value * const_decl_gen = nullptr;
+	for(auto & i : m_node_vec) {
+		if(i) {
+			const_decl_gen = i->llvm_generate(context);
+			if(const_decl_gen == nullptr) {
+				generate_error(std::cerr, context, "ConstDeclStmt->ConstVarDecl llvm_generate error");
+			}//if
+		}//if
+	}//for
+
+	return const_decl_gen;
+}//llvm_generate(context)
 
 }//namespace PL0
 

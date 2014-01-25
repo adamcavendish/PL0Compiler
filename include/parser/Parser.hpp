@@ -36,7 +36,7 @@ PL0_PUBLIC:
 	}//move assignment
 
 	bool
-	parse(std::ostream & os, std::shared_ptr<Context> toker) override;
+	parse(std::ostream & os, std::shared_ptr<Context> context) override;
 
 	void
 	pretty_print(std::ostream & os, std::size_t indent) const override;

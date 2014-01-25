@@ -43,15 +43,26 @@ Context::getIRBuilder_llvm() const {
 	return m_irbuilder_llvm;
 }//getIRBuilder_llvm()
 
+std::shared_ptr<llvm::LLVMContext>
+Context::getLLVMContext_llvm() const {
+	assert(m_llvmcontext_llvm != nullptr && "Triny to use llvm LLVMContext while it is null");
+	return m_llvmcontext_llvm;
+}//getLLVMContext_llvm()
+
 llvm::Function *
 Context::lookupFunction_llvm(const std::string & name) const {
 	return m_module_llvm->getFunction(name);
 }//lookupFunction_llvm(name)
 
-llvm::AllocaInst *
+llvm::Value *
 Context::lookupVariable_llvm(const std::string & name) const {
 	return this->getSymTable_llvm()->lookupVariable(name);
 }//lookupVariable_llvm(name)
+
+bool
+Context::createVariable_llvm(const std::string & name, llvm::AllocaInst * inst) {
+	return this->getSymTable_llvm()->createVariable(name, inst);
+}//createVariable_llvm(name)
 
 }//namespace PL0
 

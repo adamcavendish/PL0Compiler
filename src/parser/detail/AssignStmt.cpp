@@ -68,6 +68,7 @@ llvm_generate(std::shared_ptr<Context> context) const {
 	llvm::Value * R = m_assign_right->llvm_generate(context);
 
 	context->getIRBuilder_llvm()->CreateStore(L, R);
+	return nullptr;
 }//llvm_generate(context)
 
 }//namespace PL0

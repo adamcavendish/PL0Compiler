@@ -12,5 +12,8 @@ class Context;
 void
 parse_error(std::ostream & os, std::shared_ptr<Context> context, const std::string & err_msg);
 
+void
+generate_error(std::ostream & os, std::shared_ptr<Context> contest, const std::string & err_msg);
+
 }//namespace PL0
 

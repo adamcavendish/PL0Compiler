@@ -41,5 +41,10 @@ Parser::pretty_print(std::ostream & os, std::size_t indent) const {
 		m_genesis->pretty_print(os, indent + 1);
 }//pretty_print(os, indent)
 
+llvm::Value *
+Parser::llvm_generate(std::shared_ptr<Context> context) const {
+	return m_genesis->llvm_generate(context);
+}//llvm_generate(context)
+
 }//namespace PL0
 

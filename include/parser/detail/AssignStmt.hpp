@@ -41,7 +41,7 @@ PL0_PUBLIC:
 	pretty_print(std::ostream & os, std::size_t indent) const override;
 
 	llvm::Value *
-	llvm_generate(std::shared_ptr<Context> context) const;
+	llvm_generate(std::shared_ptr<Context> context) const override;
 
 PL0_PRIVATE:
 	std::unique_ptr<ParserBase> m_assign_left;

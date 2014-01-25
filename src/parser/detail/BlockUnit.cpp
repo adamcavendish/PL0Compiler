@@ -10,6 +10,9 @@
 #include <token.hpp>
 #include <preprocess.hpp>
 #include <tokenizer/Tokenizer.hpp>
+#include <context/Context.hpp>
+#include <symtable/SymTable.hpp>
+#include <symtable/SymTable_llvm.hpp>
 #include <parser/HelperFunctions.hpp>
 #include <parser/detail/ParserBase.hpp>
 #include <parser/detail/ConstDeclStmt.hpp>
@@ -21,40 +24,40 @@
 namespace PL0 {
 
 bool
-BlockUnit::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
-	m_position = toker->position();
+BlockUnit::parse(std::ostream & os, std::shared_ptr<Context> context) {
+	m_position = context->getTokenizer()->position();
 	bool flag = true;
 
-	if(toker->token() == Token::tk_const) {
+	if(context->getTokenizer()->token() == Token::tk_const) {
 		auto cdecl = auc::make_unique<ConstDeclStmt>();
-		if(!cdecl->parse(os, toker))
+		if(!cdecl->parse(os, context))
 			flag = false;
 		m_const_decl_stmt = std::move(cdecl);
 	}//if
 	
-	if(toker->token() == Token::tk_var) {
+	if(context->getTokenizer()->token() == Token::tk_var) {
 		auto vdecl = auc::make_unique<VarDeclStmt>();
-		if(!vdecl->parse(os, toker))
+		if(!vdecl->parse(os, context))
 			flag = false;
 		m_var_decl_stmt = std::move(vdecl);
 	}//if-else
 
-	while(flag == true && toker->token() == Token::tk_procedure) {
+	while(flag == true && context->getTokenizer()->token() == Token::tk_procedure) {
 		auto proc_unit = auc::make_unique<ProcedureUnit>();
-		if(!proc_unit->parse(os, toker))
+		if(!proc_unit->parse(os, context))
 			flag = false;
 		m_procedures.push_back(std::move(proc_unit));
 	}//while
 
 	if(flag == true) {
 		auto stmt = auc::make_unique<Statement>();
-		if(!stmt->parse(os, toker))
+		if(!stmt->parse(os, context))
 			flag = false;
 		m_statement = std::move(stmt);
 	}//if
 	
 	return flag;
-}//parse(os, toker)
+}//parse(os, context)
 
 void
 BlockUnit::pretty_print(std::ostream & os, std::size_t indent) const {
@@ -69,6 +72,43 @@ BlockUnit::pretty_print(std::ostream & os, std::size_t indent) const {
 	if(m_statement)
 		m_statement->pretty_print(os, indent+1);
 }//pretty_print(os, indent)
+
+llvm::Value *
+BlockUnit::llvm_generate(std::shared_ptr<Context> context) const {
+	bool flag = true;
+	context->getSymTable_llvm()->createLocalSymTable();
+
+	llvm::Value * const_decl_stmt_gen = m_const_decl_stmt->llvm_generate(context);
+	if(const_decl_stmt_gen == nullptr) {
+		generate_error(std::cerr, context, "BlockUnit->ConstDeclStmt llvm_generate error");
+		flag = false;
+	}//if
+	llvm::Value * var_decl_stmt_gen = m_var_decl_stmt->llvm_generate(context);
+	if(var_decl_stmt_gen == nullptr) {
+		generate_error(std::cerr, context, "BlockUnit->VarDeclStmt llvm_generate error");
+		flag = false;
+	}//if
+
+	for(auto & i : m_procedures) {
+		llvm::Value * procedure_gen = i->llvm_generate(context);
+		if(procedure_gen == nullptr) {
+			generate_error(std::cerr, context, "BlockUnit->ProcedureUnit llvm_generate error");
+			flag = false;
+		}//if
+	}//for
+
+	llvm::Value * statement_gen = m_statement->llvm_generate(context);
+	if(statement_gen == nullptr) {
+		generate_error(std::cerr, context, "BlockUnit->Statement llvm_generate error");
+		flag = false;
+	}//if
+
+	context->getSymTable_llvm()->dropLocalSymTable();
+
+	if(flag == true)
+		return statement_gen;
+	return nullptr;
+}//llvm_generate(context)
 
 }//namespace PL0
 

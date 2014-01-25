@@ -40,6 +40,9 @@ PL0_PUBLIC://functions
 	std::shared_ptr<llvm::IRBuilder<>>
 	getIRBuilder_llvm() const;
 
+	std::shared_ptr<llvm::LLVMContext>
+	getLLVMContext_llvm() const;
+
 	/*
 	 * Look-ups
 	 */
@@ -47,12 +50,14 @@ PL0_PUBLIC://functions
 	llvm::Function *
 	lookupFunction_llvm(const std::string & name) const;
 
-	llvm::AllocaInst *
+	llvm::Value *
 	lookupVariable_llvm(const std::string & name) const;
 
 	/*
 	 * creates
 	 */
+	bool
+	createVariable_llvm(const std::string & name, llvm::AllocaInst * inst);
 
 PL0_PRIVATE://members
 	std::shared_ptr<Tokenizer> m_toker;
@@ -60,6 +65,7 @@ PL0_PRIVATE://members
 	std::shared_ptr<SymTable> m_sym;
 	std::shared_ptr<SymTable_llvm> m_sym_llvm;
 
+	std::shared_ptr<llvm::LLVMContext> m_llvmcontext_llvm;
 	std::shared_ptr<llvm::Module> m_module_llvm;
 
 	std::shared_ptr<llvm::IRBuilder<>> m_irbuilder_llvm;

@@ -10,6 +10,7 @@
 #include <token.hpp>
 #include <preprocess.hpp>
 #include <tokenizer/Tokenizer.hpp>
+#include <context/Context.hpp>
 #include <parser/HelperFunctions.hpp>
 #include <parser/detail/Statement.hpp>
 
@@ -17,7 +18,9 @@ namespace PL0
 {
 
 bool
-CompoundStmt::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
+CompoundStmt::parse(std::ostream & os, std::shared_ptr<Context> context) {
+	auto toker = context->getTokenizer();
+
 	m_position = toker->position();
 	bool flag = true;
 
@@ -36,13 +39,13 @@ CompoundStmt::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 			break;
 		} else {
 			flag = false;
-			parse_error(os, toker, "Expect a ';' after every statement or an `end` to end a compound statement.");
+			parse_error(os, context, "Expect a ';' after every statement or an `end` to end a compound statement.");
 			break;
 		}//if-else
 	} while(true); //do-while
 
 	return flag;
-}//parse(os, toker)
+}//parse(os, context)
 
 void
 CompoundStmt::pretty_print(std::ostream & os, std::size_t indent) const {
@@ -50,6 +53,24 @@ CompoundStmt::pretty_print(std::ostream & os, std::size_t indent) const {
 	for(const auto & i : m_nodes)
 		i->pretty_print(os, indent+1);
 }//pretty_print(os, indent)
+
+llvm::Value *
+CompoundStmt::llvm_generate(std::shared_ptr<Context> context) const {
+	bool flag = true;
+
+	llvm::Value * stmt_gen = nullptr;
+	for(auto & i : m_nodes) {
+		stmt_gen = i->llvm_generate(context);
+		if(stmt_gen == nullptr) {
+			generate_error(std::cerr, context, "CompoundStmt->Statement llvm_generate errror");
+			flag = false;
+		}//if
+	}//for
+
+	if(flag == true)
+		return stmt_gen;
+	return nullptr;
+}//llvm_generate(context)
 
 }//namespace PL0
 
