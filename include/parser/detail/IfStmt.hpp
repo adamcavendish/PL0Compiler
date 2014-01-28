@@ -11,7 +11,7 @@
 namespace PL0
 {
 
-class Tokenizer;
+class Context;
 
 class IfStmt : public ParserBase
 {
@@ -35,10 +35,13 @@ PL0_PUBLIC:
 	}//move assignment
 
 	bool
-	parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) override;
+	parse(std::ostream & os, std::shared_ptr<Context> context) override;
 
 	void
 	pretty_print(std::ostream & os, std::size_t indent) const override;
+
+	llvm::Value *
+	llvm_generate(std::shared_ptr<Context> context) const override;
 
 PL0_PRIVATE:
 	std::unique_ptr<ParserBase> m_condition_node;

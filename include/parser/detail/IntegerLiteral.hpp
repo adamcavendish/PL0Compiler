@@ -11,6 +11,8 @@
 
 namespace PL0 {
 
+class Context;
+
 class IntegerLiteral : public ParserBase {
 PL0_PUBLIC: //member functions
 	IntegerLiteral() {}
@@ -30,10 +32,13 @@ PL0_PUBLIC: //member functions
 	}//move assignment
 
 	bool
-	parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) override;
+	parse(std::ostream & os, std::shared_ptr<Context> context) override;
 
 	void
 	pretty_print(std::ostream & os, std::size_t indent) const override;
+
+	llvm::Value *
+	llvm_generate(std::shared_ptr<Context> context) const override;
 
 PL0_PRIVATE: //member variables
 	int m_value;

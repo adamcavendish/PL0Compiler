@@ -1,8 +1,48 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
+#--------------------------------------------------
+# Config-options
+#--------------------------------------------------
+# Compiler Stuffs
 SET(CMAKE_CXX_COMPILER g++-4.8)
 SET(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -std=c++11 -Wall -march=native -flto -O3 ${CMAKE_CXX_FLAGS_RELEASE}")
 SET(CMAKE_CXX_FLAGS_DEBUG "-std=c++11 -g3 -gdwarf-2 -Wall -march=native ${CMAKE_CXX_FLAGS_DEBUG}")
+
+# LLVM Stuffs
+SET(LLVM_ROOT "/opt/llvm_optimized/" CACHE PATH "Root of LLVM install.")
+INCLUDE_DIRECTORIES("${LLVM_ROOT}/include/")
+LINK_DIRECTORIES("${LLVM_ROOT}/lib/")
+SET(${LLVM_DEFINITIONS} -D_DEBUG -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS
+	-D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS)
+ADD_DEFINITIONS(${LLVM_DEFINITIONS})
+SET(__LLVM_LINK_DEPEND__ dl curses pthread)
+# same as `llvm-config --cppflags --ldflags --libs core`
+SET(__LINK_LLVM_CORE__ LLVMCore LLVMSupport ${__LLVM_LINK_DEPEND__})
+# same as `llvm-config --cppflags --ldflags --libs all`
+SET(__LINK_LLVM_ALL__ 
+	LLVMLTO LLVMObjCARCOpts LLVMLinker LLVMipo LLVMVectorize LLVMBitWriter
+	LLVMIRReader LLVMBitReader LLVMAsmParser LLVMR600CodeGen LLVMR600Desc
+	LLVMR600Info LLVMR600AsmPrinter LLVMSystemZDisassembler LLVMSystemZCodeGen
+	LLVMSystemZAsmParser LLVMSystemZDesc LLVMSystemZInfo LLVMSystemZAsmPrinter
+	LLVMHexagonCodeGen LLVMHexagonAsmPrinter LLVMHexagonDesc LLVMHexagonInfo 
+	LLVMNVPTXCodeGen LLVMNVPTXDesc LLVMNVPTXInfo LLVMNVPTXAsmPrinter
+	LLVMCppBackendCodeGen LLVMCppBackendInfo LLVMMSP430CodeGen LLVMMSP430Desc
+	LLVMMSP430Info LLVMMSP430AsmPrinter LLVMXCoreDisassembler LLVMXCoreCodeGen
+	LLVMXCoreDesc LLVMXCoreInfo LLVMXCoreAsmPrinter LLVMMipsDisassembler
+	LLVMMipsCodeGen LLVMMipsAsmParser LLVMMipsDesc LLVMMipsInfo LLVMMipsAsmPrinter
+	LLVMARMDisassembler LLVMARMCodeGen LLVMARMAsmParser LLVMARMDesc LLVMARMInfo
+	LLVMARMAsmPrinter LLVMAArch64Disassembler LLVMAArch64CodeGen LLVMAArch64AsmParser
+	LLVMAArch64Desc LLVMAArch64Info LLVMAArch64AsmPrinter LLVMAArch64Utils
+	LLVMPowerPCDisassembler LLVMPowerPCCodeGen LLVMPowerPCAsmParser LLVMPowerPCDesc
+	LLVMPowerPCInfo LLVMPowerPCAsmPrinter LLVMSparcDisassembler LLVMSparcCodeGen
+	LLVMSparcAsmParser LLVMSparcDesc LLVMSparcInfo LLVMSparcAsmPrinter LLVMTableGen
+	LLVMDebugInfo LLVMOption LLVMX86Disassembler LLVMX86AsmParser LLVMX86CodeGen
+	LLVMSelectionDAG LLVMAsmPrinter LLVMMCParser LLVMX86Desc LLVMX86Info LLVMX86AsmPrinter
+	LLVMX86Utils LLVMJIT LLVMMCDisassembler LLVMInstrumentation LLVMInterpreter LLVMCodeGen
+	LLVMScalarOpts LLVMInstCombine LLVMTransformUtils LLVMipa LLVMAnalysis LLVMMCJIT 
+	LLVMTarget LLVMRuntimeDyld LLVMExecutionEngine LLVMMC LLVMObject LLVMCore LLVMSupport
+	${__LLVM_LINK_DEPEND__}
+)
 
 # --------------------------------------------------
 # Add gtest
@@ -74,6 +114,18 @@ SET(__SRC_PARSER__
 	src/parser/detail/WhileStmt.cpp
 )
 
+SET(__SRC_LLVM_SYMTABLE__
+	src/symtable/SymTable_llvm.cpp
+)
+
+SET(__SRC_SYMTABLE__
+	src/symtable/SymTable.cpp
+)
+
+SET(__SRC_CONTEXT__
+	src/context/Context.cpp
+)
+
 # --------------------------------------------------
 # PROJECT
 # --------------------------------------------------
@@ -92,8 +144,11 @@ SET(__SRC__
 	homework/hw002.cpp
 	${__SRC_TOKENIZER__}
 	${__SRC_PARSER__}
+	${__SRC_LLVM_SYMTABLE__}
+	${__SRC_CONTEXT__}
 )
 ADD_EXECUTABLE(${__TARGET_NAME__} ${__SRC__})
+TARGET_LINK_LIBRARIES(${__TARGET_NAME__} ${__LINK_LLVM_CORE__})
 
 # --------------------------------------------------
 # TESTS
@@ -124,8 +179,10 @@ SET(__SRC__
 	test/test003_Parser.cpp
 	${__SRC_TOKENIZER__}
 	${__SRC_PARSER__}
+	${__SRC_LLVM_SYMTABLE__}
+	${__SRC_CONTEXT__}
 )
 ADD_EXECUTABLE(${__TARGET_NAME__} ${__SRC__})
-TARGET_LINK_LIBRARIES(${__TARGET_NAME__} gtest gtest_main pthread)
+TARGET_LINK_LIBRARIES(${__TARGET_NAME__} gtest gtest_main pthread ${__LINK_LLVM_CORE__})
 ADD_TEST(${__TEST_NAME__} ${__TARGET_NAME__})
 

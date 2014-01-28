@@ -10,6 +10,7 @@
 #include <token.hpp>
 #include <preprocess.hpp>
 #include <tokenizer/Tokenizer.hpp>
+#include <context/Context.hpp>
 #include <parser/HelperFunctions.hpp>
 #include <parser/detail/PrimaryExpression.hpp>
 
@@ -17,7 +18,8 @@ namespace PL0
 {
 
 bool
-UnaryExpression::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
+UnaryExpression::parse(std::ostream & os, std::shared_ptr<Context> context) {
+	auto toker = context->getTokenizer();
 	m_position = toker->position();
 	bool flag = true;
 
@@ -32,12 +34,12 @@ UnaryExpression::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
 	}//if-else
 
 	auto prim = auc::make_unique<PrimaryExpression>();
-	if(!prim->parse(os, toker))
+	if(!prim->parse(os, context))
 		flag = false;
 	m_node = std::move(prim);
 
 	return flag;
-}//parse(os, toker)
+}//parse(os, context)
 
 void
 UnaryExpression::pretty_print(std::ostream & os, std::size_t indent) const {
@@ -55,6 +57,11 @@ UnaryExpression::pretty_print(std::ostream & os, std::size_t indent) const {
 			m_node->pretty_print(os, indent);
 	}//if-else
 }//pretty_print(os, indent)
+
+llvm::Value *
+UnaryExpression::llvm_generate(std::shared_ptr<Context> context) const {
+	return m_node->llvm_generate(context);
+}//llvm_generate(context)
 
 }//namespace PL0
 

@@ -10,20 +10,26 @@
 // PL0Compiler
 #include <token.hpp>
 #include <preprocess.hpp>
+#include <context/Context.hpp>
 #include <tokenizer/Tokenizer.hpp>
 #include <parser/HelperFunctions.hpp>
+// LLVM
+#include <llvm/IR/IRBuilder.h>
+#include <llvm/IR/LLVMContext.h>
+#include <llvm/IR/Module.h>
 
 namespace PL0
 {
 
 bool
-MultiplicativeExpression::parse(std::ostream & os, std::shared_ptr<Tokenizer> toker) {
+MultiplicativeExpression::parse(std::ostream & os, std::shared_ptr<Context> context) {
+	auto toker = context->getTokenizer();
 	m_position = toker->position();
 	bool flag = true;
 
 	if(flag == true) {
 		auto unary = auc::make_unique<UnaryExpression>();
-		if(!unary->parse(os, toker))
+		if(!unary->parse(os, context))
 			flag = false;
 		m_node_first = std::move(unary);
 	}//if
@@ -43,7 +49,7 @@ MultiplicativeExpression::parse(std::ostream & os, std::shared_ptr<Tokenizer> to
 		toker->next(); // Eat the current operator
 
 		auto unary = auc::make_unique<UnaryExpression>();
-		if(!unary->parse(os, toker))
+		if(!unary->parse(os, context))
 			flag = false;
 
 			node.second = std::move(unary);
@@ -51,7 +57,7 @@ MultiplicativeExpression::parse(std::ostream & os, std::shared_ptr<Tokenizer> to
 	}//while
 
 	return flag;
-}//parse(os, toker)
+}//parse(os, context)
 
 void
 MultiplicativeExpression::pretty_print(std::ostream & os, std::size_t indent) const {
@@ -87,6 +93,87 @@ MultiplicativeExpression::pretty_print(std::ostream & os, std::size_t indent) co
 			m_node_first->pretty_print(os, indent);
 	}//if-else
 }//pretty_print(os, indent)
+
+llvm::Value *
+MultiplicativeExpression::llvm_generate(std::shared_ptr<Context> context) const {
+	bool flag = true;
+	llvm::Value * ret = nullptr;
+
+	auto generate_one_node = [&](const std::unique_ptr<ParserBase> & node) -> llvm::Value * {
+		if(node) {
+			llvm::Value * unaryexpr = node->llvm_generate(context);
+				if(unaryexpr == nullptr) {
+					generate_error(std::cerr, context,
+							"MultiplicativeExpression->UnaryExpression llvm_generate error");
+					flag = false;
+				}//if
+				return unaryexpr;
+		}//if
+		return nullptr;
+	};//lambda generate_one_node(node)
+
+	auto generate_binary_op_IR = [&](const char op, llvm::Value * L, llvm::Value * R) -> llvm::Value * {
+		llvm::Value * ret = nullptr;
+		if(op == '*') {
+			ret = context->getIRBuilder_llvm()->CreateMul(L, R, "multmp");
+			if(ret == nullptr) {
+				generate_error(std::cerr, context,
+						"MultiplicativeExpression::llvm_generate error CreateMul failed");
+				std::abort();
+			}//if
+		} else if(op == '/') {
+			ret = context->getIRBuilder_llvm()->CreateSDiv(L, R, "sdivtmp");
+			if(ret == nullptr) {
+				generate_error(std::cerr, context,
+						"MultiplicativeExpression::llvm_generate error CreateSDiv failed");
+				std::abort();
+			}//if
+		} else {
+			generate_error(std::cerr, context,
+					std::string("MultiplicativeExpression::llvm_generate error: encounter unknown operator '")
+					+ op + "'");
+			flag = false;
+			return nullptr;
+		}//if-else
+		return ret;
+	};//lambda generate_binary_op_IR(op, L, R)
+
+	std::function<llvm::Value *(int)> generate_helper = [&](int rec) -> llvm::Value * {
+		llvm::Value * L = nullptr;
+		llvm::Value * R = nullptr;
+
+		if(flag == false)
+			return nullptr;
+
+		if(rec == 0) {
+			if((L = generate_one_node(m_node_first)) == nullptr)
+				return nullptr;
+			
+			if((R = generate_one_node(m_nodes[0].second)) == nullptr)
+				return nullptr;
+		}//if
+
+		if((L = generate_helper(rec-1)) == nullptr)
+			return nullptr;
+
+		if((R = generate_one_node(m_nodes[rec].second)) == nullptr)
+			return nullptr;
+
+		auto ret = generate_binary_op_IR(m_nodes[rec].first.m_op, L, R);
+		return ret;
+	};//lambda generate_helper(rec)
+
+	auto sz = m_nodes.size();
+	if(sz > 0) {
+		ret = generate_helper(sz-1);
+	} else {
+		ret = generate_one_node(m_node_first);
+	}//if-else
+
+	if(flag == true)
+		return ret;
+	return nullptr;
+}//llvm_generate(context)
 
 }//namespace PL0
 

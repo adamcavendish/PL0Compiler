@@ -47,7 +47,7 @@ VarDecl::llvm_generate(std::shared_ptr<Context> context) const {
 		flag = false;
 	}//if
 
-	context->createVariable_llvm(m_ident);
+	context->createVariable_llvm(m_ident, ret);
 
 	if(flag == true)
 		return ret;

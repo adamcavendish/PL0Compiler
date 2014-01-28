@@ -63,7 +63,7 @@ AssignStmt::pretty_print(std::ostream & os, std::size_t indent) const {
 }//pretty_print(os, indent)
 
 llvm::Value *
-llvm_generate(std::shared_ptr<Context> context) const {
+AssignStmt::llvm_generate(std::shared_ptr<Context> context) const {
 	llvm::Value * L = m_assign_left->llvm_generate(context);
 	llvm::Value * R = m_assign_right->llvm_generate(context);
 

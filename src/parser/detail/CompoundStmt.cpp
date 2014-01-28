@@ -28,7 +28,7 @@ CompoundStmt::parse(std::ostream & os, std::shared_ptr<Context> context) {
 
 	do {
 		auto stmt = auc::make_unique<Statement>();
-		if(!stmt->parse(os, toker))
+		if(!stmt->parse(os, context))
 			flag = false;
 		m_nodes.push_back(std::move(stmt));
 

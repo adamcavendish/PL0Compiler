@@ -17,8 +17,19 @@ class SymTable_llvm;
 
 class Context {
 PL0_PUBLIC://functions
-	Context(std::shared_ptr<Tokenizer> toker) :
-		m_toker(toker)
+	Context(
+			std::shared_ptr<Tokenizer> toker,
+			std::shared_ptr<SymTable> symtable,
+			std::shared_ptr<SymTable_llvm> symtable_llvm,
+			std::shared_ptr<llvm::LLVMContext> context_llvm,
+			std::shared_ptr<llvm::Module> module_llvm,
+			std::shared_ptr<llvm::IRBuilder<>> builder_llvm) :
+		m_toker(toker),
+		m_sym(symtable),
+		m_sym_llvm(symtable_llvm),
+		m_llvmcontext_llvm(context_llvm),
+		m_module_llvm(module_llvm),
+		m_irbuilder_llvm(builder_llvm)
 	{}
 
 	/*
@@ -63,11 +74,10 @@ PL0_PRIVATE://members
 	std::shared_ptr<Tokenizer> m_toker;
 
 	std::shared_ptr<SymTable> m_sym;
-	std::shared_ptr<SymTable_llvm> m_sym_llvm;
 
+	std::shared_ptr<SymTable_llvm> m_sym_llvm;
 	std::shared_ptr<llvm::LLVMContext> m_llvmcontext_llvm;
 	std::shared_ptr<llvm::Module> m_module_llvm;
-
 	std::shared_ptr<llvm::IRBuilder<>> m_irbuilder_llvm;
 };//class Context
 
