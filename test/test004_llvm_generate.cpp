@@ -34,6 +34,7 @@ TEST(LLVMGenTest, Gen01) {
 	if(pp->parse(std::cout, context)) {
         if(pp->llvm_generate(context) != nullptr) {
             context->getModule_llvm()->dump();
+            std::cout << "--------------------" << std::endl;
 		    SUCCEED();
         } else {
             FAIL();

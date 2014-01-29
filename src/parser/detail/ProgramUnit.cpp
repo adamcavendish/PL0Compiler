@@ -18,6 +18,7 @@
 #include <llvm/IR/LLVMContext.h>
 #include <llvm/IR/Module.h>
 #include <llvm/IR/IRBuilder.h>
+#include <llvm/IR/Verifier.h>
 
 namespace PL0
 {
@@ -79,6 +80,7 @@ ProgramUnit::llvm_generate(std::shared_ptr<Context> context) const {
 				"ProgramUnit::llvm_generate::BasicBlock generate error");
 		std::abort();
 	}//if
+	context->getIRBuilder_llvm()->SetInsertPoint(bb);
 
 	llvm::Value * blockgen = m_node->llvm_generate(context);
 	if(blockgen == nullptr) {
@@ -87,6 +89,11 @@ ProgramUnit::llvm_generate(std::shared_ptr<Context> context) const {
 		flag = false;
 		// do not abort for tracing back the error.
 	}//if
+
+	// Finish off the function.
+	context->getIRBuilder_llvm()->CreateRetVoid();
+	// Validate the generated code, checking for consistency.
+	llvm::verifyFunction(*func);
 
 	if(flag == true)
 		return func;

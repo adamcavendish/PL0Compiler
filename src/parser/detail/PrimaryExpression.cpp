@@ -76,7 +76,12 @@ PrimaryExpression::pretty_print(std::ostream & os, std::size_t indent) const {
 
 llvm::Value *
 PrimaryExpression::llvm_generate(std::shared_ptr<Context> context) const {
-	return m_node->llvm_generate(context);
+	auto ret = m_node->llvm_generate(context);
+    if(ret == nullptr) {
+        generate_error(std::cerr, context, "PrimaryExpression::llvm_generate error!");
+    }//if
+
+    return ret;
 }//llvm_generate(context)
 
 }//namespace PL0

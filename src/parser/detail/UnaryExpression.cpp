@@ -60,7 +60,27 @@ UnaryExpression::pretty_print(std::ostream & os, std::size_t indent) const {
 
 llvm::Value *
 UnaryExpression::llvm_generate(std::shared_ptr<Context> context) const {
-	return m_node->llvm_generate(context);
+	auto ret = m_node->llvm_generate(context);
+    if(ret == nullptr) {
+        generate_error(std::cerr, context, "UnaryExpression::llvm_generate error");
+    }//if
+
+    if(m_unary_op == '-') {
+        // create a sub from 0: `%unaryminus = sub nsw i32 0, %ret`
+        ret = context->getIRBuilder_llvm()->CreateSub(
+                llvm::ConstantInt::get(
+                    *(context->getLLVMContext_llvm()),
+                    llvm::APInt(32, 0, true)),
+                ret,
+                "unaryminus");
+        if(ret == nullptr) {
+            generate_error(std::cerr, context,
+                    "UnaryExpression::llvm_generate error CreateSub failed");
+            std::abort();
+        }//if
+    }//if
+
+    return ret;
 }//llvm_generate(context)
 
 }//namespace PL0

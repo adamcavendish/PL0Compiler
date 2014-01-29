@@ -40,7 +40,9 @@ VarDecl::llvm_generate(std::shared_ptr<Context> context) const {
 	bool flag = true;
 
 	llvm::AllocaInst * ret =context->getIRBuilder_llvm()->CreateAlloca(
-			llvm::Type::getInt32Ty(*context->getLLVMContext_llvm()));
+			llvm::Type::getInt32Ty(*context->getLLVMContext_llvm()),
+            nullptr,
+            m_ident);
 	if(ret == nullptr) {
 		generate_error(std::cerr, context,
 				"VarDecl::llvm_generate Stack Allocation Instruction create error");

@@ -1,3 +1,4 @@
+PROJECT(PL0Compiler)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 #--------------------------------------------------

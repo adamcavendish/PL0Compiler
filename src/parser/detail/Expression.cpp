@@ -154,13 +154,13 @@ Expression::llvm_generate(std::shared_ptr<Context> context) const {
 			
 			if((R = generate_one_node(m_nodes[0].second)) == nullptr)
 				return nullptr;
-		}//if
+		} else {
+            if((L = generate_helper(rec-1)) == nullptr)
+                return nullptr;
 
-		if((L = generate_helper(rec-1)) == nullptr)
-			return nullptr;
-
-		if((R = generate_one_node(m_nodes[rec].second)) == nullptr)
-			return nullptr;
+            if((R = generate_one_node(m_nodes[rec].second)) == nullptr)
+                return nullptr;
+        }//if-else
 
 		auto ret = generate_binary_op_IR(m_nodes[rec].first.m_op, L, R);
 		return ret;

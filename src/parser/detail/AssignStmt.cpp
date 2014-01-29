@@ -67,8 +67,12 @@ AssignStmt::llvm_generate(std::shared_ptr<Context> context) const {
 	llvm::Value * L = m_assign_left->llvm_generate(context);
 	llvm::Value * R = m_assign_right->llvm_generate(context);
 
-	context->getIRBuilder_llvm()->CreateStore(L, R);
-	return nullptr;
+	auto ret = context->getIRBuilder_llvm()->CreateStore(R, L);
+    if(ret == nullptr) {
+        generate_error(std::cerr, context, "AssignStmt::llvm_generate CreateStore error");
+        std::abort();
+    }//if
+	return ret;
 }//llvm_generate(context)
 
 }//namespace PL0

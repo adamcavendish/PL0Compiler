@@ -56,7 +56,9 @@ IntegerLiteral::pretty_print(std::ostream & os, std::size_t indent) const {
 
 llvm::Value *
 IntegerLiteral::llvm_generate(std::shared_ptr<Context> context) const {
-	return llvm::ConstantInt::get(*(context->getLLVMContext_llvm()), llvm::APInt(32, m_value));
+	return llvm::ConstantInt::get(
+            *(context->getLLVMContext_llvm()),
+            llvm::APInt(32, m_value, true));
 }//llvm_generate(context)
 
 }//namespace PL0
