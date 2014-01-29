@@ -156,8 +156,8 @@ TARGET_LINK_LIBRARIES(${__TARGET_NAME__} ${__LINK_LLVM_CORE__})
 SET(__TEST_NAME__ test_FileBuf)
 SET(__TARGET_NAME__ test001_FileBuf)
 SET(__SRC__
-	test/test001_FileBuf.cpp
-	src/filebuf/FileBuf.cpp
+	./test/test001_FileBuf.cpp
+	./src/filebuf/FileBuf.cpp
 )
 ADD_EXECUTABLE(${__TARGET_NAME__} ${__SRC__})
 TARGET_LINK_LIBRARIES(${__TARGET_NAME__} gtest gtest_main pthread)
@@ -166,7 +166,7 @@ ADD_TEST(${__TEST_NAME__} ${__TARGET_NAME__})
 SET(__TEST_NAME__ test_Tokenizer)
 SET(__TARGET_NAME__ test002_Tokenizer)
 SET(__SRC__
-	test/test002_Tokenizer.cpp
+	./test/test002_Tokenizer.cpp
 	${__SRC_TOKENIZER__}
 )
 ADD_EXECUTABLE(${__TARGET_NAME__} ${__SRC__})
@@ -176,7 +176,20 @@ ADD_TEST(${__TEST_NAME__} ${__TARGET_NAME__})
 SET(__TEST_NAME__ test_Parser)
 SET(__TARGET_NAME__ test003_Parser)
 SET(__SRC__
-	test/test003_Parser.cpp
+	./test/test003_Parser.cpp
+	${__SRC_TOKENIZER__}
+	${__SRC_PARSER__}
+	${__SRC_LLVM_SYMTABLE__}
+	${__SRC_CONTEXT__}
+)
+ADD_EXECUTABLE(${__TARGET_NAME__} ${__SRC__})
+TARGET_LINK_LIBRARIES(${__TARGET_NAME__} gtest gtest_main pthread ${__LINK_LLVM_CORE__})
+ADD_TEST(${__TEST_NAME__} ${__TARGET_NAME__})
+
+SET(__TEST_NAME__ test_LLVMGenenrate)
+SET(__TARGET_NAME__ test004_llvm_generate)
+SET(__SRC__
+	./test/test004_llvm_generate.cpp
 	${__SRC_TOKENIZER__}
 	${__SRC_PARSER__}
 	${__SRC_LLVM_SYMTABLE__}
