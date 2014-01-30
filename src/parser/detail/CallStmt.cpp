@@ -12,7 +12,7 @@
 #include <tokenizer/Tokenizer.hpp>
 #include <context/Context.hpp>
 #include <parser/HelperFunctions.hpp>
-#include <parser/detail/FunctionRefExpression.hpp>
+#include <parser/detail/ProcedureRefExpression.hpp>
 
 namespace PL0
 {
@@ -24,7 +24,7 @@ CallStmt::parse(std::ostream & os, std::shared_ptr<Context> context) {
 
 	context->getTokenizer()->next(); // eat the 'call' token
 
-	auto func_ref = auc::make_unique<FunctionRefExpression>();
+	auto func_ref = auc::make_unique<ProcedureRefExpression>();
 	if(!func_ref->parse(os, context))
 		flag = false;
 	m_node = std::move(func_ref);

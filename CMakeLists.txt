@@ -98,7 +98,7 @@ SET(__SRC_PARSER__
 	src/parser/detail/ConstDeclStmt.cpp
 	src/parser/detail/ConstVarDecl.cpp
 	src/parser/detail/Expression.cpp
-	src/parser/detail/FunctionRefExpression.cpp
+#   src/parser/detail/FunctionRefExpression.cpp # for future use
 	src/parser/detail/IdentRefExpression.cpp
 	src/parser/detail/IfStmt.cpp
 	src/parser/detail/IntegerLiteral.cpp

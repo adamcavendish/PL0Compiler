@@ -1,6 +1,7 @@
 #pragma once
 // STL
 #include <memory>
+#include <string>
 #include <utility>
 // auc
 #include <auc/all.hpp>
@@ -44,7 +45,7 @@ PL0_PUBLIC:
 	llvm_generate(std::shared_ptr<Context> context) const override;
 
 PL0_PRIVATE:
-	std::unique_ptr<ParserBase> m_assign_left;
+    std::string m_assign_left;
 	std::unique_ptr<ParserBase> m_assign_right;
 };//class AssignStmt
 

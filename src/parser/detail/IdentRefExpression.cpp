@@ -40,9 +40,17 @@ IdentRefExpression::pretty_print(std::ostream & os, std::size_t indent) const {
 
 llvm::Value *
 IdentRefExpression::llvm_generate(std::shared_ptr<Context> context) const {
-	auto ret = context->lookupVariable_llvm(m_ident);
+    llvm::Value * ret = nullptr;
+    ret = context->lookupVariable_llvm(m_ident);
     if(ret == nullptr) {
         generate_error(std::cerr, context, "Undefined reference of variable: " + m_ident);
+        return nullptr;
+    }//if
+
+    ret = context->getIRBuilder_llvm()->CreateLoad(ret, m_ident);
+    if(ret == nullptr) {
+        generate_error(std::cerr, context, "IdentRefExpression::llvm_generate CreateLoad error!");
+        std::abort();
     }//if
 
     return ret;

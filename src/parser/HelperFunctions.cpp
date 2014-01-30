@@ -10,7 +10,7 @@ namespace PL0 {
 
 void
 parse_error(std::ostream & os, std::shared_ptr<Context> context, const std::string & err_msg) {
-	os << "Error at " << context->getTokenizer()->position().first
+	os << "Parse Error at " << context->getTokenizer()->position().first
 		<< ":" << context->getTokenizer()->position().second
 		<< " " << err_msg << std::endl;
 	os << "Current token: <" << context->getTokenizer()->token()
@@ -19,11 +19,9 @@ parse_error(std::ostream & os, std::shared_ptr<Context> context, const std::stri
 
 void
 generate_error(std::ostream & os, std::shared_ptr<Context> context, const std::string & err_msg) {
-	os << "Error at " << context->getTokenizer()->position().first
+	os << "Generate Error at " << context->getTokenizer()->position().first
 		<< ":" << context->getTokenizer()->position().second
 		<< " " << err_msg << std::endl;
-	os << "Current token: <" << context->getTokenizer()->token()
-		<< ":'" << context->getTokenizer()->word() << "'>" << std::endl;
 }//generate_error(os, context, err_msg)
 
 }//namespace PL0

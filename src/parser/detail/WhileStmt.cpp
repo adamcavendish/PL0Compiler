@@ -63,6 +63,7 @@ WhileStmt::pretty_print(std::ostream & os, std::size_t indent) const {
 
 llvm::Value *
 WhileStmt::llvm_generate(std::shared_ptr<Context> context) const {
+    // @TODO
 	llvm::Value * cond_gen = m_condition_node->llvm_generate(context);
 	if(cond_gen == nullptr) {
 		generate_error(std::cerr, context, "WhileStmt::CondStmt llvm_generate error");
@@ -73,7 +74,7 @@ WhileStmt::llvm_generate(std::shared_ptr<Context> context) const {
 	if(stmt_gen == nullptr) {
 		generate_error(std::cerr, context, "WhileStmt::Statement llvm_generate error");
 		return nullptr;
-	}
+	}//if
 
 	return cond_gen;
 }//llvm_generate(context)

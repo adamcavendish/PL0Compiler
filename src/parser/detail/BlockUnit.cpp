@@ -78,16 +78,21 @@ BlockUnit::llvm_generate(std::shared_ptr<Context> context) const {
 	bool flag = true;
 	context->getSymTable_llvm()->createLocalSymTable();
 
-	llvm::Value * const_decl_stmt_gen = m_const_decl_stmt->llvm_generate(context);
-	if(const_decl_stmt_gen == nullptr) {
-		generate_error(std::cerr, context, "BlockUnit->ConstDeclStmt llvm_generate error");
-		flag = false;
-	}//if
-	llvm::Value * var_decl_stmt_gen = m_var_decl_stmt->llvm_generate(context);
-	if(var_decl_stmt_gen == nullptr) {
-		generate_error(std::cerr, context, "BlockUnit->VarDeclStmt llvm_generate error");
-		flag = false;
-	}//if
+    if(m_const_decl_stmt != nullptr) {
+        llvm::Value * const_decl_stmt_gen = m_const_decl_stmt->llvm_generate(context);
+        if(const_decl_stmt_gen == nullptr) {
+            generate_error(std::cerr, context, "BlockUnit->ConstDeclStmt llvm_generate error");
+            flag = false;
+        }//if
+    }//if
+
+    if(m_var_decl_stmt != nullptr) {
+        llvm::Value * var_decl_stmt_gen = m_var_decl_stmt->llvm_generate(context);
+        if(var_decl_stmt_gen == nullptr) {
+            generate_error(std::cerr, context, "BlockUnit->VarDeclStmt llvm_generate error");
+            flag = false;
+        }//if
+    }//if
 
 	for(auto & i : m_procedures) {
 		llvm::Value * procedure_gen = i->llvm_generate(context);
@@ -97,17 +102,21 @@ BlockUnit::llvm_generate(std::shared_ptr<Context> context) const {
 		}//if
 	}//for
 
-	llvm::Value * statement_gen = m_statement->llvm_generate(context);
-	if(statement_gen == nullptr) {
-		generate_error(std::cerr, context, "BlockUnit->Statement llvm_generate error");
-		flag = false;
-	}//if
+    if(m_statement != nullptr) {
+        llvm::Value * statement_gen = m_statement->llvm_generate(context);
+        if(statement_gen == nullptr) {
+            generate_error(std::cerr, context, "BlockUnit->Statement llvm_generate error");
+            flag = false;
+        }//if
+    }//if
 
 	context->getSymTable_llvm()->dropLocalSymTable();
 
-	if(flag == true)
-		return statement_gen;
-	return nullptr;
+	if(flag == true) {
+		return llvm::Constant::getNullValue(
+                llvm::Type::getInt32Ty(*(context->getLLVMContext_llvm())));
+    }//if
+    return nullptr;
 }//llvm_generate(context)
 
 }//namespace PL0

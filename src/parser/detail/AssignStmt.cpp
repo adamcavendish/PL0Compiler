@@ -25,20 +25,24 @@ namespace PL0
 
 bool
 AssignStmt::parse(std::ostream & os, std::shared_ptr<Context> context) {
-	m_position = context->getTokenizer()->position();
+    auto toker = context->getTokenizer();
+	m_position = toker->position();
 	bool flag = true;
 
-	auto identref = auc::make_unique<IdentRefExpression>();
-	if(!identref->parse(os, context))
-		flag = false;
-	m_assign_left = std::move(identref);
+    if(toker->token() != Token::tk_identifier) {
+        flag = false;
+        parse_error(os, context, "Expect an identifier here!");
+    } else {
+	    m_assign_left = toker->word();
+        toker->next(); // eat current identifier
+    }//if-else
 
 	if(flag == true) {
-		if(context->getTokenizer()->token() != Token::tk_assign) {
+		if(toker->token() != Token::tk_assign) {
 			flag = false;
-			parse_error(os, context, "Expect an assignment operator Here!");
+			parse_error(os, context, "Expect an assignment operator here!");
 		} else {
-			context->getTokenizer()->next(); // eat the current ':=' operator
+			toker->next(); // eat the current ':=' operator
 		}//if-else
 	}//if
 	
@@ -54,25 +58,35 @@ AssignStmt::parse(std::ostream & os, std::shared_ptr<Context> context) {
 
 void
 AssignStmt::pretty_print(std::ostream & os, std::size_t indent) const {
-	os << std::string(indent, '\t') << "AssignStmt " << this->position_str() << std::endl;
+	os << std::string(indent, '\t') << "AssignStmt " << this->position_str()
+        << " '" << m_assign_left << "'" << std::endl;
 
-	if(m_assign_left)
-		m_assign_left->pretty_print(os, indent+1);
 	if(m_assign_right)
 		m_assign_right->pretty_print(os, indent+1);
 }//pretty_print(os, indent)
 
 llvm::Value *
 AssignStmt::llvm_generate(std::shared_ptr<Context> context) const {
-	llvm::Value * L = m_assign_left->llvm_generate(context);
-	llvm::Value * R = m_assign_right->llvm_generate(context);
+	llvm::Value * ident = context->lookupVariable_llvm(m_assign_left);
+    if(ident == nullptr) {
+        generate_error(std::cerr, context,
+                "undefined variable assignment of variable: " + m_assign_left);
+        return nullptr;
+    }//if
 
-	auto ret = context->getIRBuilder_llvm()->CreateStore(R, L);
+	llvm::Value * R = m_assign_right->llvm_generate(context);
+    if(R == nullptr) {
+        generate_error(std::cerr, context, "AssignStmt->Expression llvm_generate error");
+        return nullptr;
+    }//if
+
+	auto ret = context->getIRBuilder_llvm()->CreateStore(R, ident);
     if(ret == nullptr) {
         generate_error(std::cerr, context, "AssignStmt::llvm_generate CreateStore error");
         std::abort();
     }//if
-	return ret;
+    return llvm::Constant::getNullValue(
+            llvm::Type::getInt32Ty(*(context->getLLVMContext_llvm())));
 }//llvm_generate(context)
 
 }//namespace PL0

@@ -173,8 +173,10 @@ Expression::llvm_generate(std::shared_ptr<Context> context) const {
 		ret = generate_one_node(m_node_first);
 	}//if-else
 
-	if(flag == true)
-		return ret;
+	if(flag == true) {
+        return llvm::Constant::getNullValue(
+                llvm::Type::getInt32Ty(*(context->getLLVMContext_llvm())));
+    }//if
 	return nullptr;
 }//llvm_generate(context)
 

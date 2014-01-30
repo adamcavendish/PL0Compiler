@@ -40,7 +40,12 @@ FunctionRefExpression::pretty_print(std::ostream & os, std::size_t indent) const
 
 llvm::Value *
 FunctionRefExpression::llvm_generate(std::shared_ptr<Context> context) const {
-	return context->lookupFunction_llvm(m_ident);
+	llvm::Function * func = context->getModule_llvm()->getFunction(m_ident);
+	if(func == nullptr) {
+		std::cerr << "Function: " << m_ident << " not found" << std::endl;
+	}//if
+
+	return func;
 }//llvm_generate(context)
 
 }//namespace PL0

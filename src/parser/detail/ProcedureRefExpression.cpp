@@ -28,6 +28,7 @@ ProcedureRefExpression::parse(std::ostream & os, std::shared_ptr<Context> contex
 	m_position = toker->position();
 
 	m_ident = toker->word();
+	toker->next(); // eat current function identifier
 	return true;
 }//parse(os, context)
 

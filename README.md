@@ -93,7 +93,7 @@ Parser structure:
 		| WhileStmt
 		| AssignStmt
 	AssignStmt
-		::= IdentRefExpression ":=" Expression
+		::= ident ":=" Expression
 	CallStmt
 		::=	"call" ProcedureRefExpression
 	ProcedureRefExpression

@@ -74,9 +74,11 @@ VarDeclStmt::llvm_generate(std::shared_ptr<Context> context) const {
 		vardecl_gen = i->llvm_generate(context);
 		if(vardecl_gen == nullptr) {
 			generate_error(std::cerr, context, "VarDeclStmt::VarDecl llvm_generate error");
+            // continue on generation, do not need to return nullptr
 		}//if
 	}//for
-	return vardecl_gen;
+	return llvm::Constant::getNullValue(
+            llvm::Type::getInt32Ty(*(context->getLLVMContext_llvm())));
 }//llvm_generate(context)
 
 }//namespace PL0

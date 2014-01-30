@@ -27,11 +27,20 @@ SymTable_llvm::dropLocalSymTable() {
 
 llvm::Value *
 SymTable_llvm::lookupVariable(const std::string & name) const {
-	auto & last_localsym_table_ref = m_sym_arr.back();
-	auto ret = last_localsym_table_ref.find(name);
-	if(ret == last_localsym_table_ref.end())
-		return nullptr;
-	return (ret->second);
+    if(m_sym_arr.empty())
+        return nullptr;
+
+    // sym table iterator
+    auto iter = m_sym_arr.end();
+    auto iter_end = m_sym_arr.begin();
+    do {
+        --iter;
+        auto ret = iter->find(name);
+        if(ret != iter->end())
+            return (ret->second);
+    } while(iter != iter_end);
+
+    return nullptr;
 }//lookupVariable(name)
 
 bool

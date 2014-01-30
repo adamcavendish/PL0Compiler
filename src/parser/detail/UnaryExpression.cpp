@@ -43,16 +43,15 @@ UnaryExpression::parse(std::ostream & os, std::shared_ptr<Context> context) {
 
 void
 UnaryExpression::pretty_print(std::ostream & os, std::size_t indent) const {
-#ifndef NDEBUG
-	os << std::string(indent, '\t') << "UnaryExpression(debug) " << this->position_str() << std::endl;
-#endif//NDEBUG
-
 	if(m_unary_op != '\0') {
 		os << std::string(indent, '\t') << "UnaryExpression "
 			<< this->position_str() << " '" << m_unary_op << "'" << std::endl;
 		if(m_node)
 			m_node->pretty_print(os, indent+1);
 	} else {
+#ifndef NDEBUG
+	    os << std::string(indent, '\t') << "UnaryExpression(debug) " << this->position_str() << std::endl;
+#endif//NDEBUG
 		if(m_node)
 			m_node->pretty_print(os, indent);
 	}//if-else
