@@ -61,14 +61,20 @@ PL0_PUBLIC://functions
 	llvm::Function *
 	lookupFunction_llvm(const std::string & name) const;
 
-	llvm::Value *
+	llvm::AllocaInst *
 	lookupVariable_llvm(const std::string & name) const;
+
+    llvm::Constant *
+    lookupConstant_llvm(const std::string & name) const;
 
 	/*
 	 * creates
 	 */
 	bool
 	createVariable_llvm(const std::string & name, llvm::AllocaInst * inst);
+
+    bool
+    createConstant_llvm(const std::string & name, llvm::Constant * constant);
 
 PL0_PRIVATE://members
 	std::shared_ptr<Tokenizer> m_toker;

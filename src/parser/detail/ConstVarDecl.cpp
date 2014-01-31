@@ -58,15 +58,22 @@ llvm::Value *
 ConstVarDecl::llvm_generate(std::shared_ptr<Context> context) const {
 	bool flag = true;
 
-	llvm::Value * int_gen = m_node->llvm_generate(context);
+	llvm::ConstantInt * int_gen = (llvm::ConstantInt *)(m_node->llvm_generate(context));
 	if(int_gen == nullptr) {
 		generate_error(std::cerr, context, "ConstVarDecl->IntegerLiteral llvm_generate error");
 		flag = false;
 	}//if
 
-	if(flag == true)
-		return int_gen;
-	return nullptr;
+    if(context->createConstant_llvm(m_ident, int_gen) == false) {
+        generate_error(std::cerr, context,
+                "Redefinition of variable: " + m_ident);
+        flag = false;
+    }//if
+
+	if(flag == false) {
+		return nullptr;
+    }//if
+	return int_gen;
 }//llvm_generate(context)
 
 }//namespace PL0

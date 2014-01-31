@@ -26,7 +26,6 @@ namespace PL0
 bool
 Expression::parse(std::ostream & os, std::shared_ptr<Context> context) {
 	auto toker = context->getTokenizer();
-
 	m_position = toker->position();
 	bool flag = true;
 
@@ -100,7 +99,7 @@ Expression::pretty_print(std::ostream & os, std::size_t indent) const {
 llvm::Value *
 Expression::llvm_generate(std::shared_ptr<Context> context) const {
 	bool flag = true;
-	llvm::Value * ret = nullptr;
+    llvm::Value * ret = nullptr;
 
 	auto generate_one_node = [&](const std::unique_ptr<ParserBase> & node) -> llvm::Value * {
 		if(node) {
@@ -174,8 +173,7 @@ Expression::llvm_generate(std::shared_ptr<Context> context) const {
 	}//if-else
 
 	if(flag == true) {
-        return llvm::Constant::getNullValue(
-                llvm::Type::getInt32Ty(*(context->getLLVMContext_llvm())));
+        return ret;
     }//if
 	return nullptr;
 }//llvm_generate(context)

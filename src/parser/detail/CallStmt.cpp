@@ -50,7 +50,8 @@ CallStmt::llvm_generate(std::shared_ptr<Context> context) const {
 		flag = false;
 	}//if
 
-	llvm::CallInst * ret = context->getIRBuilder_llvm()->CreateCall(func, "callstmt");
+    // if `func` returns void you cannot assign a name to the ret (because there's no ret ._. ).
+	llvm::CallInst * ret = context->getIRBuilder_llvm()->CreateCall(func);
 	if(ret == nullptr) {
 		generate_error(std::cerr, context, "CallStmt::llvm_generate Call Instruction Create error");
 		std::abort();

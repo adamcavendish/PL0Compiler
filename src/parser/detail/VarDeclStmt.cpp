@@ -77,6 +77,7 @@ VarDeclStmt::llvm_generate(std::shared_ptr<Context> context) const {
             // continue on generation, do not need to return nullptr
 		}//if
 	}//for
+
 	return llvm::Constant::getNullValue(
             llvm::Type::getInt32Ty(*(context->getLLVMContext_llvm())));
 }//llvm_generate(context)

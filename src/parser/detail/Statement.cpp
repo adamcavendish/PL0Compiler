@@ -77,7 +77,8 @@ llvm::Value *
 Statement::llvm_generate(std::shared_ptr<Context> context) const {
 	auto ret = m_node->llvm_generate(context);
     if(ret == nullptr) {
-        generate_error(std::cerr, context, "Statement->AssignStmt llvm_generate error");
+        generate_error(std::cerr, context,
+                "Statement->AssignStmt/CallStmt/CompondStmt/IfStmt/WhileStmt llvm_generate error");
     }//if
     return ret;
 }//llvm_generate(context)

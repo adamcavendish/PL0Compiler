@@ -71,7 +71,7 @@ ProcedureDecl::llvm_generate(std::shared_ptr<Context> context) const {
 			FT, llvm::Function::ExternalLinkage, m_ident, context->getModule_llvm().get());
 	// prevent from redefinition
 	if (F->getName() != m_ident) {
-	  // Delete the one we just made and get the existing one.
+	  // Delete the one we just made
 	  F->eraseFromParent();
 	  return nullptr;
 	}//if

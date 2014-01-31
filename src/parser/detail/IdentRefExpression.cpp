@@ -40,20 +40,42 @@ IdentRefExpression::pretty_print(std::ostream & os, std::size_t indent) const {
 
 llvm::Value *
 IdentRefExpression::llvm_generate(std::shared_ptr<Context> context) const {
-    llvm::Value * ret = nullptr;
-    ret = context->lookupVariable_llvm(m_ident);
-    if(ret == nullptr) {
-        generate_error(std::cerr, context, "Undefined reference of variable: " + m_ident);
+    auto processVariable = [&]() -> llvm::Value * {
+        llvm::AllocaInst * lookup = context->lookupVariable_llvm(m_ident);
+        if(lookup != nullptr) {
+            llvm::LoadInst * loadInst = context->getIRBuilder_llvm()->CreateLoad(lookup, m_ident);
+            if(loadInst == nullptr) {
+                generate_error(std::cerr, context,
+                        "IdentRefExpression::llvm_generate CreateLoad error!");
+                std::abort();
+            }//if
+            return loadInst;
+        }//if
         return nullptr;
+    };//lambda processVariable
+
+    auto processConstant = [&]() -> llvm::Value * {
+        llvm::Constant * constant = context->lookupConstant_llvm(m_ident);
+        if(constant != nullptr) {
+            return constant;
+        }//if
+        return nullptr;
+    };//lambda processConstant
+
+    llvm::Value * ret = nullptr;
+
+    // --------------------------------------------------
+    // main part
+    // --------------------------------------------------
+    if((ret = processVariable()) != nullptr){
+        return ret;
+    }//if
+    if((ret = processConstant()) != nullptr) {
+        return ret;
     }//if
 
-    ret = context->getIRBuilder_llvm()->CreateLoad(ret, m_ident);
-    if(ret == nullptr) {
-        generate_error(std::cerr, context, "IdentRefExpression::llvm_generate CreateLoad error!");
-        std::abort();
-    }//if
-
-    return ret;
+    generate_error(std::cerr, context, "Undefined reference to variable/constant: " + m_ident);
+    return nullptr;
 }//llvm_generate(context)
 
 }//namespace PL0

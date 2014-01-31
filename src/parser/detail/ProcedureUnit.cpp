@@ -64,15 +64,16 @@ ProcedureUnit::pretty_print(std::ostream & os, std::size_t indent) const {
 
 llvm::Value *
 ProcedureUnit::llvm_generate(std::shared_ptr<Context> context) const {
+    bool flag = true;
 	llvm::Function * procedure = (llvm::Function *)(m_proc_node->llvm_generate(context));
 	if(procedure == nullptr) {
 		// @FIXME
 		generate_error(std::cerr, context, "Function Redefinition");
-		return nullptr;
+        flag = false;
 	}//if
 
 	llvm::BasicBlock * BB = llvm::BasicBlock::Create(
-			*(context->getLLVMContext_llvm()), "entry", procedure);
+			*(context->getLLVMContext_llvm()), "ProcedureEntry", procedure);
 	if(BB == nullptr) {
 		generate_error(std::cerr, context, "ProcedureUnit::llvm_generate BasicBlock Creation Error");
 		std::abort();
@@ -81,16 +82,21 @@ ProcedureUnit::llvm_generate(std::shared_ptr<Context> context) const {
 
 	llvm::Value * block = m_block->llvm_generate(context);
 	if(block == nullptr) {
-		generate_error(std::cerr, context, "ProcedureUnit::BlockUnit llvm_generate error");
-		return nullptr;
+		generate_error(std::cerr, context, "ProcedureUnit->BlockUnit llvm_generate error");
+        flag = false;
 	}//if
 
+	context->getIRBuilder_llvm()->SetInsertPoint(BB);
 	// Finish off the function.
 	context->getIRBuilder_llvm()->CreateRetVoid();
 	// Validate the generated code, checking for consistency.
 	llvm::verifyFunction(*procedure);
 
-	return procedure;
+    if(flag == true) {
+        return llvm::Constant::getNullValue(
+                llvm::Type::getInt32Ty(*(context->getLLVMContext_llvm())));
+    }//if
+    return nullptr;
 } //llvm_generate(context)
 
 }//namespace PL0

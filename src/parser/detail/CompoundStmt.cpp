@@ -67,8 +67,10 @@ CompoundStmt::llvm_generate(std::shared_ptr<Context> context) const {
 		}//if
 	}//for
 
-	if(flag == true)
-		return stmt_gen;
+	if(flag == true) {
+		return llvm::Constant::getNullValue(
+                llvm::Type::getInt32Ty(*(context->getLLVMContext_llvm())));
+    }//if
 	return nullptr;
 }//llvm_generate(context)
 

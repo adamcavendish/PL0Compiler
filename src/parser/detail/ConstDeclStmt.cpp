@@ -78,7 +78,8 @@ ConstDeclStmt::llvm_generate(std::shared_ptr<Context> context) const {
 		}//if
 	}//for
 
-	return const_decl_gen;
+    return llvm::Constant::getNullValue(
+            llvm::Type::getInt32Ty(*(context->getLLVMContext_llvm())));
 }//llvm_generate(context)
 
 }//namespace PL0

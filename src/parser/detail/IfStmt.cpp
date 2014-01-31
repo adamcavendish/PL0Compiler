@@ -126,7 +126,6 @@ IfStmt::llvm_generate(std::shared_ptr<Context> context) const {
     context->getIRBuilder_llvm()->SetInsertPoint(mergeBB);
     llvm::PHINode * phinode = context->getIRBuilder_llvm()->CreatePHI(
             llvm::Type::getInt32Ty(*(context->getLLVMContext_llvm())), 1, "ifphi");
-
     phinode->addIncoming(thengen, thenBB);
 
     return phinode;

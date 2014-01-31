@@ -54,15 +54,25 @@ Context::lookupFunction_llvm(const std::string & name) const {
 	return m_module_llvm->getFunction(name);
 }//lookupFunction_llvm(name)
 
-llvm::Value *
+llvm::AllocaInst *
 Context::lookupVariable_llvm(const std::string & name) const {
 	return this->getSymTable_llvm()->lookupVariable(name);
 }//lookupVariable_llvm(name)
+
+llvm::Constant *
+Context::lookupConstant_llvm(const std::string & name) const {
+    return this->getSymTable_llvm()->lookupConstant(name);
+}//lookupConstant_llvm(name)
 
 bool
 Context::createVariable_llvm(const std::string & name, llvm::AllocaInst * inst) {
 	return this->getSymTable_llvm()->createVariable(name, inst);
 }//createVariable_llvm(name)
+
+bool
+Context::createConstant_llvm(const std::string & name, llvm::Constant * constant) {
+    return this->getSymTable_llvm()->createConstant(name, constant);
+}//createConstant_llvm(name, constant)
 
 }//namespace PL0
 

@@ -76,6 +76,8 @@ BlockUnit::pretty_print(std::ostream & os, std::size_t indent) const {
 llvm::Value *
 BlockUnit::llvm_generate(std::shared_ptr<Context> context) const {
 	bool flag = true;
+    // reserve current InsertBlock, so that after `procedures`.
+    llvm::BasicBlock * bb = context->getIRBuilder_llvm()->GetInsertBlock();
 	context->getSymTable_llvm()->createLocalSymTable();
 
     if(m_const_decl_stmt != nullptr) {
@@ -102,6 +104,7 @@ BlockUnit::llvm_generate(std::shared_ptr<Context> context) const {
 		}//if
 	}//for
 
+    context->getIRBuilder_llvm()->SetInsertPoint(bb);
     if(m_statement != nullptr) {
         llvm::Value * statement_gen = m_statement->llvm_generate(context);
         if(statement_gen == nullptr) {

@@ -67,24 +67,28 @@ AssignStmt::pretty_print(std::ostream & os, std::size_t indent) const {
 
 llvm::Value *
 AssignStmt::llvm_generate(std::shared_ptr<Context> context) const {
-	llvm::Value * ident = context->lookupVariable_llvm(m_assign_left);
-    if(ident == nullptr) {
-        generate_error(std::cerr, context,
-                "undefined variable assignment of variable: " + m_assign_left);
-        return nullptr;
-    }//if
-
+    // Emit the initializer before adding the variable to scope, this prevents
+    // the initializer from referencing the variable itself,
+    
 	llvm::Value * R = m_assign_right->llvm_generate(context);
     if(R == nullptr) {
         generate_error(std::cerr, context, "AssignStmt->Expression llvm_generate error");
         return nullptr;
     }//if
 
-	auto ret = context->getIRBuilder_llvm()->CreateStore(R, ident);
-    if(ret == nullptr) {
+	llvm::Value * ident = context->lookupVariable_llvm(m_assign_left);
+    if(ident == nullptr) {
+        generate_error(std::cerr, context,
+                "undefined assignment of variable: " + m_assign_left);
+        return nullptr;
+    }//if
+
+	auto store = context->getIRBuilder_llvm()->CreateStore(R, ident);
+    if(store == nullptr) {
         generate_error(std::cerr, context, "AssignStmt::llvm_generate CreateStore error");
         std::abort();
     }//if
+
     return llvm::Constant::getNullValue(
             llvm::Type::getInt32Ty(*(context->getLLVMContext_llvm())));
 }//llvm_generate(context)

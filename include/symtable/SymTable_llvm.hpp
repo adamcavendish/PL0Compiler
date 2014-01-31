@@ -35,10 +35,16 @@ PL0_PUBLIC://functions
 	dropLocalSymTable();
 	
 	/**
-	 * @brief Lookup a variable, either constant or variable
+	 * @brief Lookup a variable (non-constant)
 	 */
-	llvm::Value *
+	llvm::AllocaInst *
 	lookupVariable(const std::string & name) const;
+
+    /**
+     * @brief Lookup a constant
+     */
+    llvm::Constant *
+    lookupConstant(const std::string & name) const;
 
 	/**
 	 * @brief Create a variable (non-constant)

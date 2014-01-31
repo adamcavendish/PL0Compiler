@@ -10,9 +10,11 @@
 // PL0Compiler
 #include <token.hpp>
 #include <preprocess.hpp>
-#include <context/Context.hpp>
 #include <tokenizer/Tokenizer.hpp>
+#include <context/Context.hpp>
 #include <parser/HelperFunctions.hpp>
+#include <parser/detail/ParserBase.hpp>
+#include <parser/detail/UnaryExpression.hpp>
 // LLVM
 #include <llvm/IR/IRBuilder.h>
 #include <llvm/IR/LLVMContext.h>
@@ -97,7 +99,7 @@ MultiplicativeExpression::pretty_print(std::ostream & os, std::size_t indent) co
 llvm::Value *
 MultiplicativeExpression::llvm_generate(std::shared_ptr<Context> context) const {
 	bool flag = true;
-	llvm::Value * ret = nullptr;
+    llvm::Value * ret = nullptr;
 
 	auto generate_one_node = [&](const std::unique_ptr<ParserBase> & node) -> llvm::Value * {
 		if(node) {
@@ -170,8 +172,9 @@ MultiplicativeExpression::llvm_generate(std::shared_ptr<Context> context) const 
 		ret = generate_one_node(m_node_first);
 	}//if-else
 
-	if(flag == true)
-		return ret;
+	if(flag == true) {
+        return ret;
+    }//if
 	return nullptr;
 }//llvm_generate(context)
 

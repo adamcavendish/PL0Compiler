@@ -90,13 +90,16 @@ ProgramUnit::llvm_generate(std::shared_ptr<Context> context) const {
 		// do not abort for tracing back the error.
 	}//if
 
+	context->getIRBuilder_llvm()->SetInsertPoint(bb);
 	// Finish off the function.
 	context->getIRBuilder_llvm()->CreateRetVoid();
 	// Validate the generated code, checking for consistency.
 	llvm::verifyFunction(*func);
 
-	if(flag == true)
-		return func;
+	if(flag == true) {
+        return llvm::Constant::getNullValue(
+                llvm::Type::getInt32Ty(*(context->getLLVMContext_llvm())));
+    }//if
 	return nullptr;
 }//llvm_generate(context)
 
