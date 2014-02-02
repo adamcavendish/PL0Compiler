@@ -54,15 +54,25 @@ Context::lookupFunction_llvm(const std::string & name) const {
 	return m_module_llvm->getFunction(name);
 }//lookupFunction_llvm(name)
 
-llvm::AllocaInst *
-Context::lookupVariable_llvm(const std::string & name) const {
-	return this->getSymTable_llvm()->lookupVariable(name);
-}//lookupVariable_llvm(name)
+std::pair<bool, llvm::AllocaInst *>
+Context::lookupVariable_local_llvm(const std::string & name) const {
+	return this->getSymTable_llvm()->lookupVariable_local(name);
+}//lookupVariable_local_llvm(name)
 
-llvm::Constant *
-Context::lookupConstant_llvm(const std::string & name) const {
-    return this->getSymTable_llvm()->lookupConstant(name);
-}//lookupConstant_llvm(name)
+std::pair<bool, llvm::Constant *>
+Context::lookupConstant_local_llvm(const std::string & name) const {
+    return this->getSymTable_llvm()->lookupConstant_local(name);
+}//lookupConstant_local_llvm(name)
+
+std::pair<bool, llvm::AllocaInst *>
+Context::lookupVariable_parent_llvm(const std::string & name) const {
+	return this->getSymTable_llvm()->lookupVariable_parent(name);
+}//lookupVariable_parent_llvm(name)
+
+std::pair<bool, llvm::Constant *>
+Context::lookupConstant_parent_llvm(const std::string & name) const {
+    return this->getSymTable_llvm()->lookupConstant_parent(name);
+}//lookupConstant_parent_llvm(name)
 
 bool
 Context::createVariable_llvm(const std::string & name, llvm::AllocaInst * inst) {

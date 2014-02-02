@@ -61,11 +61,17 @@ PL0_PUBLIC://functions
 	llvm::Function *
 	lookupFunction_llvm(const std::string & name) const;
 
-	llvm::AllocaInst *
-	lookupVariable_llvm(const std::string & name) const;
+    std::pair<bool, llvm::AllocaInst *>
+	lookupVariable_local_llvm(const std::string & name) const;
 
-    llvm::Constant *
-    lookupConstant_llvm(const std::string & name) const;
+    std::pair<bool, llvm::Constant *>
+    lookupConstant_local_llvm(const std::string & name) const;
+
+    std::pair<bool, llvm::AllocaInst *>
+	lookupVariable_parent_llvm(const std::string & name) const;
+
+    std::pair<bool, llvm::Constant *>
+    lookupConstant_parent_llvm(const std::string & name) const;
 
 	/*
 	 * creates
