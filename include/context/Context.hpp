@@ -54,6 +54,10 @@ PL0_PUBLIC://functions
 	std::shared_ptr<llvm::LLVMContext>
 	getLLVMContext_llvm() const;
 
+    std::vector<std::string> &
+    getClosure()
+    { return m_closure.back(); }
+
 	/*
 	 * Look-ups
 	 */
@@ -76,16 +80,44 @@ PL0_PUBLIC://functions
 	/*
 	 * creates
 	 */
+
+    void
+    createLocalSymTable_llvm();
+
 	bool
 	createVariable_llvm(const std::string & name, llvm::AllocaInst * inst);
 
     bool
     createConstant_llvm(const std::string & name, llvm::Constant * constant);
 
+    void
+    createClosure()
+    { m_closure.push_back(decltype(m_closure)::value_type()); }
+    
+    /**
+     * Destroyers
+     */
+	void
+	dropLocalSymTable_llvm();
+
+    void
+    dropClosure()
+    { m_closure.pop_back(); }
+
+    /**
+     * Modifiers
+     */
+    bool
+    setVariable_llvm(const std::string & name, llvm::AllocaInst * inst);
+
+    bool
+    setConstant_llvm(const std::string & name, llvm::Constant * constant);
+
 PL0_PRIVATE://members
 	std::shared_ptr<Tokenizer> m_toker;
 
 	std::shared_ptr<SymTable> m_sym;
+    std::vector<std::vector<std::string>> m_closure;
 
 	std::shared_ptr<SymTable_llvm> m_sym_llvm;
 	std::shared_ptr<llvm::LLVMContext> m_llvmcontext_llvm;

@@ -65,8 +65,12 @@ ProcedureDecl::pretty_print(std::ostream & os, std::size_t indent) const {
 
 llvm::Value *
 ProcedureDecl::llvm_generate(std::shared_ptr<Context> context) const {
+    // closure parameters
+    std::vector<llvm::Type *> closure_params(context->getClosure().size(),
+            llvm::Type::getInt32Ty(*(context->getLLVMContext_llvm())));
+
 	llvm::FunctionType *FT = llvm::FunctionType::get(
-			llvm::Type::getVoidTy(*(context->getLLVMContext_llvm())), false);
+			llvm::Type::getVoidTy(*(context->getLLVMContext_llvm())), closure_params, false);
 	llvm::Function * F = llvm::Function::Create(
 			FT, llvm::Function::ExternalLinkage, m_ident, context->getModule_llvm().get());
 	// prevent from redefinition

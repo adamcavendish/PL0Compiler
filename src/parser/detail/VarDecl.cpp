@@ -19,14 +19,21 @@ namespace PL0
 
 bool
 VarDecl::parse(std::ostream & os, std::shared_ptr<Context> context) {
+    bool flag = false;
 	auc_UNUSED(os);
 
 	m_position = context->getTokenizer()->position();
 
 	m_ident = context->getTokenizer()->word();
+
+    if(context->createVariable_llvm(m_ident, nullptr) == false) {
+        parse_error(os, context, "Redefinition of variable: " + m_ident);
+        flag = false;
+    }//if
+
 	context->getTokenizer()->next(); // eat the current identifier
 
-	return true;
+	return flag;
 }//parse(os, context)
 
 void
@@ -49,9 +56,9 @@ VarDecl::llvm_generate(std::shared_ptr<Context> context) const {
 		flag = false;
 	}//if
 
-	if(context->createVariable_llvm(m_ident, ret) == false) {
+	if(context->setVariable_llvm(m_ident, ret) == false) {
         generate_error(std::cerr, context,
-                "Redefinition of variable: " + m_ident);
+                "Unable to find variable at generation: " + m_ident);
         flag = false;
     }//if
 

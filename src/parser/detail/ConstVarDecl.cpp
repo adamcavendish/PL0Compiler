@@ -22,6 +22,12 @@ ConstVarDecl::parse(std::ostream & os, std::shared_ptr<Context> context) {
 
 	m_ident = toker->word();
 
+    // add a constant declaration
+    if(context->createConstant_llvm(m_ident, nullptr) == false) {
+        parse_error(os, context, "Redefinition of constant: " + m_ident);
+        flag = false;
+    }//if
+
 	toker->next(); // eat the current identifier
 
 	if(toker->token() != Token::tk_equal) {
@@ -64,9 +70,9 @@ ConstVarDecl::llvm_generate(std::shared_ptr<Context> context) const {
 		flag = false;
 	}//if
 
-    if(context->createConstant_llvm(m_ident, int_gen) == false) {
+    if(context->setConstant_llvm(m_ident, int_gen) == false) {
         generate_error(std::cerr, context,
-                "Redefinition of variable: " + m_ident);
+                "Unable to find variable at generation: " + m_ident);
         flag = false;
     }//if
 

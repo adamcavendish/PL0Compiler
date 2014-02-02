@@ -74,6 +74,11 @@ Context::lookupConstant_parent_llvm(const std::string & name) const {
     return this->getSymTable_llvm()->lookupConstant_parent(name);
 }//lookupConstant_parent_llvm(name)
 
+void
+Context::createLocalSymTable_llvm() {
+    return this->getSymTable_llvm()->createLocalSymTable();
+}//createLocalSymTable()
+
 bool
 Context::createVariable_llvm(const std::string & name, llvm::AllocaInst * inst) {
 	return this->getSymTable_llvm()->createVariable(name, inst);
@@ -83,6 +88,21 @@ bool
 Context::createConstant_llvm(const std::string & name, llvm::Constant * constant) {
     return this->getSymTable_llvm()->createConstant(name, constant);
 }//createConstant_llvm(name, constant)
+
+void
+Context::dropLocalSymTable_llvm() {
+    return this->getSymTable_llvm()->dropLocalSymTable();
+}//dropLocalSymTable_llvm()
+
+bool
+Context::setVariable_llvm(const std::string & name, llvm::AllocaInst * inst) {
+    return this->getSymTable_llvm()->setVariable(name, inst);
+}//setVariable_llvm(name, inst)
+
+bool
+Context::setConstant_llvm(const std::string & name, llvm::Constant * constant) {
+    return this->getSymTable_llvm()->setConstant(name, constant);
+}//setConstant_llvm(name, constant)
 
 }//namespace PL0
 
