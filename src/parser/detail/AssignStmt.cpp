@@ -76,14 +76,15 @@ AssignStmt::llvm_generate(std::shared_ptr<Context> context) const {
         return nullptr;
     }//if
 
-	llvm::Value * ident = context->lookupVariable_llvm(m_assign_left);
-    if(ident == nullptr) {
+    // @TODO local and parent variables
+    std::pair<bool, llvm::Value *> ident = context->lookupVariable_local_llvm(m_assign_left);
+    if(ident.second == nullptr) {
         generate_error(std::cerr, context,
                 "undefined assignment of variable: " + m_assign_left);
         return nullptr;
     }//if
 
-	auto store = context->getIRBuilder_llvm()->CreateStore(R, ident);
+	auto store = context->getIRBuilder_llvm()->CreateStore(R, ident.second);
     if(store == nullptr) {
         generate_error(std::cerr, context, "AssignStmt::llvm_generate CreateStore error");
         std::abort();

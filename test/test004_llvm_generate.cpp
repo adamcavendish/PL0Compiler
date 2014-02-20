@@ -45,6 +45,7 @@ TEST(LLVMGenTest, Gen01) {
 	}//if-else
 }
 
+/*
 TEST(LLVMGenTest, Gen02) {
 	auto pwm = std::make_shared<WordMap>();
 	auto pfb = std::make_shared<FileBuf>("parser02.pl0");
@@ -59,7 +60,6 @@ TEST(LLVMGenTest, Gen02) {
 			toker, nullptr, llvmsymtable, llvmcontext, llvmmodule, llvmbuilder);
 
     SUCCEED();
-    /*
 	if(pp->parse(std::cout, context)) {
         pp->pretty_print(std::cout, 0);
         if(pp->llvm_generate(context) != nullptr) {
@@ -73,10 +73,11 @@ TEST(LLVMGenTest, Gen02) {
 		pp->pretty_print(std::cout, 0);
 		FAIL();
 	}//if-else
-    */
 }
+*/
 
-TEST(LLVMGenTest, Gen3) {
+/*
+TEST(LLVMGenTest, Gen03) {
 	auto pwm = std::make_shared<WordMap>();
 	auto pfb = std::make_shared<FileBuf>("parser03.pl0");
 	auto toker = std::make_shared<Tokenizer>(pfb, pwm);
@@ -90,7 +91,6 @@ TEST(LLVMGenTest, Gen3) {
 			toker, nullptr, llvmsymtable, llvmcontext, llvmmodule, llvmbuilder);
 
 	if(pp->parse(std::cout, context)) {
-        /*
         if(pp->llvm_generate(context) != nullptr) {
             context->getModule_llvm()->dump();
             std::cout << "--------------------" << std::endl;
@@ -98,13 +98,13 @@ TEST(LLVMGenTest, Gen3) {
         } else {
             FAIL();
         }//if-else
-        */
 		SUCCEED();
 	} else {
 		pp->pretty_print(std::cout, 0);
 		FAIL();
 	}//if-else
 }
+*/
 
 int main(int argc, char * argv[])
 {
@@ -120,8 +120,6 @@ int main(int argc, char * argv[])
         "\n"
         "procedure check1;\n"
         "var dd;\n"
-        "   procedure check2;\n"
-        "       c := 2;\n"
         "\n"
         "begin\n"
         "   dd := 1\n"
