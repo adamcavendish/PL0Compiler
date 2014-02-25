@@ -19,8 +19,7 @@ namespace PL0
 
 bool
 VarDecl::parse(std::ostream & os, std::shared_ptr<Context> context) {
-    bool flag = false;
-	auc_UNUSED(os);
+    bool flag = true;
 
 	m_position = context->getTokenizer()->position();
 
