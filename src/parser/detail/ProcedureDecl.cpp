@@ -53,6 +53,14 @@ ProcedureDecl::parse(std::ostream & os, std::shared_ptr<Context> context) {
 		}//if-else
 	}//if
 
+    auto insertret = context->getFunctionClosureMap()->insert(
+            std::make_pair(m_ident, std::unordered_set<std::string>()));
+    if(insertret.second == false) {
+        parse_error(os, context, "ProcedureDecl parse error: insert procedure map failed: " + m_ident);
+        flag = false;
+    }//if
+    context->currentFunctionIter() = insertret.first;
+
 	return flag;
 }//parse(os, context)
 
@@ -65,11 +73,15 @@ ProcedureDecl::pretty_print(std::ostream & os, std::size_t indent) const {
 
 llvm::Value *
 ProcedureDecl::llvm_generate(std::shared_ptr<Context> context) const {
+    auto closuresz = context->getFunctionClosureMap()->find(m_ident)->second.size();
+#if 1
+    std::cerr << "closure size: " << closuresz << std::endl;
+#endif
     // closure parameters
-    std::vector<llvm::Type *> closure_params(context->getClosure().size(),
+    std::vector<llvm::Type *> closure_params(closuresz,
             llvm::Type::getInt32Ty(*(context->getLLVMContext_llvm())));
 
-	llvm::FunctionType *FT = llvm::FunctionType::get(
+	llvm::FunctionType * FT = llvm::FunctionType::get(
 			llvm::Type::getVoidTy(*(context->getLLVMContext_llvm())), closure_params, false);
 	llvm::Function * F = llvm::Function::Create(
 			FT, llvm::Function::ExternalLinkage, m_ident, context->getModule_llvm().get());
@@ -79,6 +91,37 @@ ProcedureDecl::llvm_generate(std::shared_ptr<Context> context) const {
 	  F->eraseFromParent();
 	  return nullptr;
 	}//if
+
+    // get current procedure's closure
+    auto && closure = [&] {
+        auto findret = context->getFunctionClosureMap()->find(m_ident);
+        if(findret == context->getFunctionClosureMap()->end()) {
+            generate_error(std::cerr, context, "ProcedureDecl::llvm_generate error: "
+                    "cannot get current function in function closure map!");
+            std::abort();
+        }//if
+        return findret->second;
+    }();
+
+#if 1
+    std::cerr << "procedure decl closure: " << m_ident << std::endl;
+#endif
+
+    llvm::Function::arg_iterator AI = F->arg_begin(), AI_end = F->arg_end();
+    auto closure_iter = closure.begin();
+    while(AI != AI_end) {
+#if 1
+        std::cerr << "\t" << *closure_iter << std::endl;
+#endif
+        AI->setName(*closure_iter);
+        if(context->createVariable_llvm(*closure_iter, AI) == false) {
+            generate_error(std::cerr, context, "ProcedureDecl::llvm_generate error: "
+                    "cannot create local variable '" + *closure_iter + "'");
+            std::abort();
+        }//if
+        ++closure_iter;
+        ++AI;
+    }//while
 
 	return F;
 }//llvm_generate(context)

@@ -55,7 +55,7 @@ VarDecl::llvm_generate(std::shared_ptr<Context> context) const {
 		flag = false;
 	}//if
 
-	if(context->setVariable_llvm(m_ident, ret) == false) {
+	if(context->createVariable_llvm(m_ident, ret) == false) {
         generate_error(std::cerr, context,
                 "Unable to find variable at generation: " + m_ident);
         flag = false;

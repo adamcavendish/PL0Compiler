@@ -3,6 +3,8 @@
 // STL
 #include <memory>
 #include <vector>
+#include <unordered_set>
+#include <unordered_map>
 // PL0Compiler
 #include <preprocess.hpp>
 // LLVM
@@ -54,9 +56,14 @@ PL0_PUBLIC://functions
 	std::shared_ptr<llvm::LLVMContext>
 	getLLVMContext_llvm() const;
 
-    std::vector<std::string> &
-    getClosure()
-    { return m_closure.back(); }
+    std::shared_ptr<std::unordered_map<std::string, std::unordered_set<std::string>>> &
+    getFunctionClosureMap();
+
+    const std::shared_ptr<std::unordered_map<std::string, std::unordered_set<std::string>>> &
+    getFunctionClosureMap() const;
+
+    std::unordered_map<std::string, std::unordered_set<std::string>>::iterator &
+    currentFunctionIter();
 
 	/*
 	 * Look-ups
@@ -65,13 +72,13 @@ PL0_PUBLIC://functions
 	llvm::Function *
 	lookupFunction_llvm(const std::string & name) const;
 
-    std::pair<bool, llvm::AllocaInst *>
+    std::pair<bool, llvm::Value *>
 	lookupVariable_local_llvm(const std::string & name) const;
 
     std::pair<bool, llvm::Constant *>
     lookupConstant_local_llvm(const std::string & name) const;
 
-    std::pair<bool, llvm::AllocaInst *>
+    std::pair<bool, llvm::Value *>
 	lookupVariable_parent_llvm(const std::string & name) const;
 
     std::pair<bool, llvm::Constant *>
@@ -85,44 +92,38 @@ PL0_PUBLIC://functions
     createLocalSymTable_llvm();
 
 	bool
-	createVariable_llvm(const std::string & name, llvm::AllocaInst * inst);
+	createVariable_llvm(const std::string & name, llvm::Value * inst);
 
     bool
     createConstant_llvm(const std::string & name, llvm::Constant * constant);
 
-    void
-    createClosure()
-    { m_closure.push_back(decltype(m_closure)::value_type()); }
-    
     /**
      * Destroyers
      */
 	void
 	dropLocalSymTable_llvm();
 
-    void
-    dropClosure()
-    { m_closure.pop_back(); }
-
     /**
      * Modifiers
      */
     bool
-    setVariable_llvm(const std::string & name, llvm::AllocaInst * inst);
+    setVariable_llvm(const std::string & name, llvm::Value * inst);
 
     bool
     setConstant_llvm(const std::string & name, llvm::Constant * constant);
-
+    
 PL0_PRIVATE://members
 	std::shared_ptr<Tokenizer> m_toker;
 
 	std::shared_ptr<SymTable> m_sym;
-    std::vector<std::vector<std::string>> m_closure;
 
 	std::shared_ptr<SymTable_llvm> m_sym_llvm;
 	std::shared_ptr<llvm::LLVMContext> m_llvmcontext_llvm;
 	std::shared_ptr<llvm::Module> m_module_llvm;
 	std::shared_ptr<llvm::IRBuilder<>> m_irbuilder_llvm;
+
+    std::unordered_map<std::string, std::unordered_set<std::string>>::iterator
+        m_current_function_iter;
 };//class Context
 
 }//namespace PL0

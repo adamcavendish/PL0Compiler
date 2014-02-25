@@ -37,6 +37,24 @@ AssignStmt::parse(std::ostream & os, std::shared_ptr<Context> context) {
         toker->next(); // eat current identifier
     }//if-else
 
+    // check identifer's scope (whether to add closure)
+    bool ident_local = context->lookupVariable_local_llvm(m_assign_left).first;
+    bool ident_parent = context->lookupVariable_parent_llvm(m_assign_left).first;
+    // if it's a local identifier, pass
+    if(ident_local == false) {
+        if(ident_parent == true) {
+            // referencing to parent identifiers, need a closure
+            context->currentFunctionIter()->second.insert(m_assign_left);
+            auto createret = context->createVariable_llvm(m_assign_left, nullptr);
+            if(createret == false) {
+                parse_error(os, context, "create closure logical error!");
+                std::abort();
+            }//if
+        } else {
+            parse_error(os, context, "Undefined reference to variable: " + m_assign_left);
+        }//if-else
+    }//if
+
 	if(flag == true) {
 		if(toker->token() != Token::tk_assign) {
 			flag = false;

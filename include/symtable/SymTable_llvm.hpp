@@ -5,6 +5,7 @@
 #include <memory>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 #include <utility>
 // PL0Compiler
 #include <preprocess.hpp>
@@ -20,6 +21,8 @@ namespace PL0
 
 class SymTable_llvm {
 PL0_PUBLIC://functions
+    SymTable_llvm();
+
 	/**
 	 * @brief	Create a new local sym table for look up.
 	 *			Usually used at entering a BlockUnit/Function.
@@ -36,9 +39,9 @@ PL0_PUBLIC://functions
 	
 	/**
 	 * @brief Lookup a local variable (non-constant)
-     * @return whether it is found and the corresponding AllocaInst *
+     * @return whether it is found and the corresponding Value *
 	 */
-    std::pair<bool, llvm::AllocaInst *>
+    std::pair<bool, llvm::Value *>
 	lookupVariable_local(const std::string & name) const;
 
     /**
@@ -50,9 +53,9 @@ PL0_PUBLIC://functions
 
     /**
      * @brief Lookup a parent variable (non-constant)
-     * @return whether it is found and the corresponding AllocaInst *
+     * @return whether it is found and the corresponding Value *
      */
-    std::pair<bool, llvm::AllocaInst *>
+    std::pair<bool, llvm::Value *>
     lookupVariable_parent(const std::string & name) const;
 
     /**
@@ -67,7 +70,7 @@ PL0_PUBLIC://functions
      * @return true if succeeded, false (redefinition) if failed.
 	 */
 	bool
-	createVariable(const std::string & name, llvm::AllocaInst * inst);
+	createVariable(const std::string & name, llvm::Value * inst);
 
 	/**
 	 * @brief Create a Constant
@@ -77,11 +80,11 @@ PL0_PUBLIC://functions
 	createConstant(const std::string & name, llvm::Constant * constant);
 
 	/**
-	 * @brief Set a variable's corresponding AllocaInst to `inst` (non-constant)
+	 * @brief Set a variable's corresponding Value to `inst` (non-constant)
      * @return true if succeeded, false (no definition) if failed
 	 */
 	bool
-	setVariable(const std::string & name, llvm::AllocaInst * inst);
+	setVariable(const std::string & name, llvm::Value * inst);
 
 	/**
 	 * @brief Set a Constant's corresponding Constant to `constant`
@@ -90,14 +93,35 @@ PL0_PUBLIC://functions
 	bool
 	setConstant(const std::string & name, llvm::Constant * constant);
 
+    /**
+     * @brief Shallow wrap to get the function closures
+     * @return function closure set
+     */
+    std::shared_ptr<std::unordered_map<
+        std::string,
+        std::unordered_set<std::string>>> &
+    getFunctionClosureMap()
+    { return m_pfunction_closure_map; }
+
+    const std::shared_ptr<std::unordered_map<
+        std::string,
+        std::unordered_set<std::string>>> &
+    getFunctionClosureMap() const
+    { return m_pfunction_closure_map; }
+
 PL0_PRIVATE://variables
 	std::vector<
-		std::unordered_map<std::string, llvm::AllocaInst *>
+		std::unordered_map<std::string, llvm::Value *>
 	> m_sym_arr;
 
 	std::vector<
 		std::unordered_map<std::string, llvm::Constant *>
 	> m_constsym_arr;
+
+    std::shared_ptr<std::unordered_map<
+        std::string,
+        std::unordered_set<std::string>
+    >> m_pfunction_closure_map;
 };//class SymTable_llvm
 
 }//namespace PL0

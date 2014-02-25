@@ -19,9 +19,10 @@ namespace PL0
 
 bool
 VarDeclStmt::parse(std::ostream & os, std::shared_ptr<Context> context) {
+	bool flag = true;
+
 	auto toker = context->getTokenizer();
 	m_position = toker->position();
-	bool flag = true;
 
 	toker->next(); // eat 'var' token
 

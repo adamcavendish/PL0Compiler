@@ -70,7 +70,7 @@ ConstVarDecl::llvm_generate(std::shared_ptr<Context> context) const {
 		flag = false;
 	}//if
 
-    if(context->setConstant_llvm(m_ident, int_gen) == false) {
+    if(context->createConstant_llvm(m_ident, int_gen) == false) {
         generate_error(std::cerr, context,
                 "Unable to find variable at generation: " + m_ident);
         flag = false;

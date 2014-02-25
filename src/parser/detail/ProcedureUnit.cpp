@@ -25,6 +25,8 @@ namespace PL0
 
 bool
 ProcedureUnit::parse(std::ostream & os, std::shared_ptr<Context> context) {
+	context->createLocalSymTable_llvm();
+
 	auto toker = context->getTokenizer();
 
 	m_position = toker->position();
@@ -49,6 +51,8 @@ ProcedureUnit::parse(std::ostream & os, std::shared_ptr<Context> context) {
 		}//if-else
 	}//if
 
+	context->dropLocalSymTable_llvm();
+
 	return flag;
 }//parse(os, context)
 
@@ -64,6 +68,8 @@ ProcedureUnit::pretty_print(std::ostream & os, std::size_t indent) const {
 
 llvm::Value *
 ProcedureUnit::llvm_generate(std::shared_ptr<Context> context) const {
+	context->createLocalSymTable_llvm();
+
     bool flag = true;
 	llvm::Function * procedure = (llvm::Function *)(m_proc_node->llvm_generate(context));
 	if(procedure == nullptr) {
@@ -91,6 +97,8 @@ ProcedureUnit::llvm_generate(std::shared_ptr<Context> context) const {
 	context->getIRBuilder_llvm()->CreateRetVoid();
 	// Validate the generated code, checking for consistency.
 	llvm::verifyFunction(*procedure);
+
+	context->dropLocalSymTable_llvm();
 
     if(flag == true) {
         return llvm::Constant::getNullValue(

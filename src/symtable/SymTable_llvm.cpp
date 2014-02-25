@@ -13,6 +13,12 @@
 
 namespace PL0
 {
+
+SymTable_llvm::SymTable_llvm() :
+    m_pfunction_closure_map(std::make_shared<
+            std::unordered_map<std::string, std::unordered_set<std::string>>>())
+{}
+
 void
 SymTable_llvm::createLocalSymTable() {
 	m_sym_arr.push_back(decltype(m_sym_arr)::value_type());
@@ -25,7 +31,7 @@ SymTable_llvm::dropLocalSymTable() {
 	m_constsym_arr.pop_back();
 }//dropLocalSymTable()
 
-std::pair<bool, llvm::AllocaInst *>
+std::pair<bool, llvm::Value *>
 SymTable_llvm::lookupVariable_local(const std::string & name) const {
     if(m_sym_arr.empty())
         return std::make_pair(false, nullptr);
@@ -38,7 +44,7 @@ SymTable_llvm::lookupVariable_local(const std::string & name) const {
     return std::make_pair(true, ret->second);
 }//lookupVariable_local(name)
 
-std::pair<bool, llvm::AllocaInst *>
+std::pair<bool, llvm::Value *>
 SymTable_llvm::lookupVariable_parent(const std::string & name) const {
     if(m_sym_arr.empty())
         return std::make_pair(false, nullptr);
@@ -47,11 +53,16 @@ SymTable_llvm::lookupVariable_parent(const std::string & name) const {
     auto iter = m_sym_arr.end();
     --iter; //skip the local sym table (at the back)
     auto iter_end = m_sym_arr.begin();
+
+    if(iter == iter_end)
+        return std::make_pair(false, nullptr);
+
     do {
         --iter;
         auto ret = iter->find(name);
-        if(ret != iter->end())
+        if(ret != iter->end()) {
             return std::make_pair(true, ret->second);
+        }//if
     } while(iter != iter_end);
 
     return std::make_pair(false, nullptr);
@@ -79,6 +90,10 @@ SymTable_llvm::lookupConstant_parent(const std::string & name) const {
     auto iter = m_constsym_arr.end();
     --iter; //skip the local sym table (at the back)
     auto iter_end = m_constsym_arr.begin();
+
+    if(iter == iter_end)
+        return std::make_pair(false, nullptr);
+
     do {
         --iter;
         auto ret = iter->find(name);
@@ -90,7 +105,7 @@ SymTable_llvm::lookupConstant_parent(const std::string & name) const {
 }//lookupVariable_parent(name)
 
 bool
-SymTable_llvm::createVariable(const std::string & name, llvm::AllocaInst * inst) {
+SymTable_llvm::createVariable(const std::string & name, llvm::Value * inst) {
     if(this->lookupVariable_local(name).first == true)
         return false;
 
@@ -108,7 +123,7 @@ SymTable_llvm::createConstant(const std::string & name, llvm::Constant * constan
 }//createConstant(name, constant)
 
 bool
-SymTable_llvm::setVariable(const std::string & name, llvm::AllocaInst * inst) {
+SymTable_llvm::setVariable(const std::string & name, llvm::Value * inst) {
     if(m_sym_arr.empty())
         return false;
 

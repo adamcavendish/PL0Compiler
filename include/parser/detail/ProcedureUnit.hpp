@@ -3,6 +3,7 @@
 #include <iostream>
 #include <memory>
 #include <utility>
+#include <unordered_set>
 #include <string>
 // auc
 #include <auc/all.hpp>

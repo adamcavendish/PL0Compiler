@@ -25,6 +25,8 @@ namespace PL0
 
 bool
 ProgramUnit::parse(std::ostream & os, std::shared_ptr<Context> context) {
+	context->createLocalSymTable_llvm();
+
 	m_position = context->getTokenizer()->position();
 	bool flag = true;
 
@@ -43,6 +45,8 @@ ProgramUnit::parse(std::ostream & os, std::shared_ptr<Context> context) {
 		}//if-else
 	}//if
 
+	context->dropLocalSymTable_llvm();
+
 	return flag;
 }//parse(os, context)
 
@@ -56,6 +60,8 @@ ProgramUnit::pretty_print(std::ostream & os, std::size_t indent) const {
 
 llvm::Value *
 ProgramUnit::llvm_generate(std::shared_ptr<Context> context) const {
+	context->createLocalSymTable_llvm();
+
 	bool flag = true;
 
 	llvm::FunctionType * func_type = llvm::FunctionType::get(
@@ -95,6 +101,8 @@ ProgramUnit::llvm_generate(std::shared_ptr<Context> context) const {
 	context->getIRBuilder_llvm()->CreateRetVoid();
 	// Validate the generated code, checking for consistency.
 	llvm::verifyFunction(*func);
+
+	context->dropLocalSymTable_llvm();
 
 	if(flag == true) {
         return llvm::Constant::getNullValue(

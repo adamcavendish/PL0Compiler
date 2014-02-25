@@ -49,12 +49,27 @@ Context::getLLVMContext_llvm() const {
 	return m_llvmcontext_llvm;
 }//getLLVMContext_llvm()
 
+std::shared_ptr<std::unordered_map<std::string, std::unordered_set<std::string>>> &
+Context::getFunctionClosureMap() {
+    return m_sym_llvm->getFunctionClosureMap();
+}//getFunctionClosureMap()
+
+const std::shared_ptr<std::unordered_map<std::string, std::unordered_set<std::string>>> &
+Context::getFunctionClosureMap() const {
+    return m_sym_llvm->getFunctionClosureMap();
+}//getFunctionClosureMap()
+
+std::unordered_map<std::string, std::unordered_set<std::string>>::iterator &
+Context::currentFunctionIter() {
+    return m_current_function_iter;
+}//currentFunctionIter()
+
 llvm::Function *
 Context::lookupFunction_llvm(const std::string & name) const {
 	return m_module_llvm->getFunction(name);
 }//lookupFunction_llvm(name)
 
-std::pair<bool, llvm::AllocaInst *>
+std::pair<bool, llvm::Value *>
 Context::lookupVariable_local_llvm(const std::string & name) const {
 	return this->getSymTable_llvm()->lookupVariable_local(name);
 }//lookupVariable_local_llvm(name)
@@ -64,7 +79,7 @@ Context::lookupConstant_local_llvm(const std::string & name) const {
     return this->getSymTable_llvm()->lookupConstant_local(name);
 }//lookupConstant_local_llvm(name)
 
-std::pair<bool, llvm::AllocaInst *>
+std::pair<bool, llvm::Value *>
 Context::lookupVariable_parent_llvm(const std::string & name) const {
 	return this->getSymTable_llvm()->lookupVariable_parent(name);
 }//lookupVariable_parent_llvm(name)
@@ -80,7 +95,7 @@ Context::createLocalSymTable_llvm() {
 }//createLocalSymTable()
 
 bool
-Context::createVariable_llvm(const std::string & name, llvm::AllocaInst * inst) {
+Context::createVariable_llvm(const std::string & name, llvm::Value * inst) {
 	return this->getSymTable_llvm()->createVariable(name, inst);
 }//createVariable_llvm(name)
 
@@ -95,7 +110,7 @@ Context::dropLocalSymTable_llvm() {
 }//dropLocalSymTable_llvm()
 
 bool
-Context::setVariable_llvm(const std::string & name, llvm::AllocaInst * inst) {
+Context::setVariable_llvm(const std::string & name, llvm::Value * inst) {
     return this->getSymTable_llvm()->setVariable(name, inst);
 }//setVariable_llvm(name, inst)
 

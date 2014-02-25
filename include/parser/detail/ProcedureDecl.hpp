@@ -2,6 +2,7 @@
 // STL
 #include <memory>
 #include <utility>
+#include <vector>
 // auc
 #include <auc/all.hpp>
 // PL0Compiler

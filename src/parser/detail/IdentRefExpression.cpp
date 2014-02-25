@@ -17,34 +17,73 @@
 #include <llvm/IR/LLVMContext.h>
 #include <llvm/IR/Module.h>
 
+#if 1
+#include <symtable/SymTable_llvm.hpp>
+#endif
+
 namespace PL0
 {
 
 bool
 IdentRefExpression::parse(std::ostream & os, std::shared_ptr<Context> context) {
-	auc_UNUSED(os);
+    bool flag = true;
+
 	auto toker = context->getTokenizer();
 
 	m_position = toker->position();
 
 	m_ident = toker->word();
-    bool ident_local = context->lookupVariable_local_llvm(m_ident).second;
-    bool ident_parent = context->lookupVariable_parent_llvm(m_ident).second;
+
+    bool ident_local = context->lookupVariable_local_llvm(m_ident).first;
+    bool ident_parent = context->lookupVariable_parent_llvm(m_ident).first;
+    bool const_local = context->lookupConstant_local_llvm(m_ident).first;
+    bool const_parent = context->lookupConstant_parent_llvm(m_ident).first;
+
+#if 1
+    std::cerr << "IdentRef " << m_ident << ": "
+        << ident_local << " "
+        << ident_parent << " "
+        << const_local << " "
+        << const_parent << " "
+        << std::endl;
+#endif
+
+    bool ident_found = false;
 
     // if it's a local identifier, pass
-    if(ident_local == false) {
+    if(ident_local == false && const_local == false) {
         if(ident_parent == true) {
             // referencing to parent identifiers, need a closure
-            context->getClosure().push_back(m_ident);
-        } else {
+            context->currentFunctionIter()->second.insert(m_ident);
+            auto createret = context->createVariable_llvm(m_ident, nullptr);
+            if(createret == false) {
+                parse_error(os, context, "create closure logical error!");
+                std::abort();
+            }//if
+            ident_found = true;
+        }//if
+
+        if(const_parent == true) {
+            // referencing to parent constants, need a closure
+            context->currentFunctionIter()->second.insert(m_ident);
+            auto createret = context->createConstant_llvm(m_ident, nullptr);
+            if(createret == false) {
+                parse_error(os, context, "create closure logical error!");
+                std::abort();
+            }//if
+            ident_found = true;
+        }//if
+
+        if(ident_found == false) {
             // if the identifier is not found
             parse_error(os, context, "Undefined reference to variant/constant: " + m_ident);
-        }//if-else
-    }//if-else
+            flag = false;
+        }//if
+    }//if
 
 	toker->next(); // eat the identifer token
 
-	return true;
+	return flag;
 }//parse(os, context) 
 
 void
@@ -56,7 +95,7 @@ IdentRefExpression::pretty_print(std::ostream & os, std::size_t indent) const {
 llvm::Value *
 IdentRefExpression::llvm_generate(std::shared_ptr<Context> context) const {
     auto processVariable = [&]() -> llvm::Value * {
-        llvm::AllocaInst * lookup = context->lookupVariable_local_llvm(m_ident).second;
+        llvm::Value * lookup = context->lookupVariable_local_llvm(m_ident).second;
         if(lookup != nullptr) {
             llvm::LoadInst * loadInst = context->getIRBuilder_llvm()->CreateLoad(lookup, m_ident);
             if(loadInst == nullptr) {

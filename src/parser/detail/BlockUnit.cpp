@@ -78,8 +78,6 @@ BlockUnit::llvm_generate(std::shared_ptr<Context> context) const {
 	bool flag = true;
     // reserve current InsertBlock, so that after `procedures`.
     llvm::BasicBlock * bb = context->getIRBuilder_llvm()->GetInsertBlock();
-	context->createLocalSymTable_llvm();
-    context->createClosure();
 
     if(m_const_decl_stmt != nullptr) {
         llvm::Value * const_decl_stmt_gen = m_const_decl_stmt->llvm_generate(context);
@@ -113,9 +111,6 @@ BlockUnit::llvm_generate(std::shared_ptr<Context> context) const {
             flag = false;
         }//if
     }//if
-
-    context->dropClosure();
-	context->dropLocalSymTable_llvm();
 
 	if(flag == true) {
 		return llvm::Constant::getNullValue(
